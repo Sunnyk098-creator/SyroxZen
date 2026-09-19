@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunny Official | Premium Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Static Background with Canvas Stars -->
+    <canvas id="star-canvas"></canvas>
+
+    <!-- Navigation -->
+    <nav class="glass-nav">
+        <div class="nav-content">
+            <a href="#home" class="logo">𝐒ᴜɴɴʏ.</a>
+            <ul class="nav-links">
+                <li><a href="#home" class="active">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#connect">Connect</a></li>
+            </ul>
+            <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="home" class="hero-section">
+            <div class="hero-content reveal zoom-in">
+                <div class="profile-wrapper">
+                    <div class="profile-ring"></div>
+                    <img src="./dp.png" alt="Sunny Official" class="profile-pic">
+                    <div class="status-indicator"></div>
+                </div>
+                
+                <div class="hero-text">
+                    <div class="premium-badge"><i class="fas fa-crown"></i> Creator Mode</div>
+                    <h1 class="premium-title">𝐒ᴜɴɴʏ 𝐎ғғɪᴄɪᴀʟ</h1>
+                    <h2 class="typing-container">
+                        <span id="role-typing"></span><span class="cursor">|</span>
+                    </h2>
+                </div>
+            </div>
+
+            <!-- Sleek Code Window -->
+            <div class="code-window premium-card reveal slide-up delay-1">
+                <div class="window-header">
+                    <div class="window-dots">
+                        <span></span><span></span><span></span>
+                    </div>
+                    <span class="window-title">developer_profile.js</span>
+                </div>
+                <div class="window-body">
+<pre><code><span class="keyword">const</span> <span class="variable">developer</span> = {
+  <span class="property">name</span>: <span class="string">"Sunny Official"</span>,
+  <span class="property">username</span>: <span class="string">"@SyroxZen"</span>,
+  <span class="property">focus</span>: [
+    <span class="string">"Apps"</span>, <span class="string">"Games"</span>, <span class="string">"Bots"</span>
+  ]
+};</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Intro Section -->
+        <section id="about" class="intro-section">
+            <div class="premium-card welcome-card reveal slide-up">
+                <h2>Welcome to My Space</h2>
+                <p>Crafting digital experiences through code, creativity, and automation.</p>
+                <div class="terminal-text">
+                    <span id="terminal-typing"></span><span class="cursor">|</span>
+                </div>
+            </div>
+
+            <div class="bento-grid">
+                <div class="bento-card reveal slide-right"><div class="card-icon-wrapper"><i class="fab fa-telegram"></i></div> <div><span>Name</span> <h4>𝐒ᴜɴɴʏ 𝐎ғғɪᴄɪᴀʟ</h4></div></div>
+                <div class="bento-card reveal zoom-in delay-1"><div class="card-icon-wrapper"><i class="fas fa-at"></i></div> <div><span>Username</span> <h4>@SyroxZen</h4></div></div>
+                <div class="bento-card reveal slide-left delay-2"><div class="card-icon-wrapper"><i class="fas fa-id-badge"></i></div> <div><span>Permanent ID</span> <h4>8522410574</h4></div></div>
+                <div class="bento-card reveal slide-right"><div class="card-icon-wrapper"><i class="fas fa-user"></i></div> <div><span>Real Name</span> <h4>Sunny Kumar</h4></div></div>
+                <div class="bento-card reveal zoom-in delay-1"><div class="card-icon-wrapper"><i class="fas fa-birthday-cake"></i></div> <div><span>Age</span> <h4>It's just a number</h4></div></div>
+                <div class="bento-card reveal slide-left delay-2"><div class="card-icon-wrapper"><i class="fas fa-map-marker-alt"></i></div> <div><span>State</span> <h4>Uttar Pradesh</h4></div></div>
+                <div class="bento-card reveal slide-right"><div class="card-icon-wrapper"><i class="fas fa-om"></i></div> <div><span>Religion</span> <h4>Hindu</h4></div></div>
+                <div class="bento-card reveal zoom-in delay-1"><div class="card-icon-wrapper"><i class="fas fa-briefcase"></i></div> <div><span>Work</span> <h4>Apps • Games • Bots</h4></div></div>
+                <div class="bento-card reveal slide-left delay-2"><div class="card-icon-wrapper"><i class="fas fa-check-circle"></i></div> <div><span>Status</span> <h4>Active</h4></div></div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="skills-section">
+            <h2 class="section-title reveal zoom-in">Expertise</h2>
+            <div class="skills-bento">
+                <div class="skill-card premium-card reveal slide-up">
+                    <i class="fab fa-android skill-icon"></i>
+                    <h3>Android Apps</h3>
+                    <div class="skill-bar"><div class="skill-progress"></div></div>
+                </div>
+                <div class="skill-card premium-card reveal slide-up delay-1">
+                    <i class="fab fa-telegram-plane skill-icon"></i>
+                    <h3>Telegram Bots</h3>
+                    <div class="skill-bar"><div class="skill-progress"></div></div>
+                </div>
+                <div class="skill-card premium-card reveal slide-up delay-2">
+                    <i class="fas fa-gamepad skill-icon"></i>
+                    <h3>Game Dev</h3>
+                    <div class="skill-bar"><div class="skill-progress"></div></div>
+                </div>
+                <div class="skill-card premium-card reveal slide-up">
+                    <i class="fas fa-globe skill-icon"></i>
+                    <h3>Web Projects</h3>
+                    <div class="skill-bar"><div class="skill-progress"></div></div>
+                </div>
+                <div class="skill-card premium-card reveal slide-up delay-1">
+                    <i class="fas fa-robot skill-icon"></i>
+                    <h3>Automation</h3>
+                    <div class="skill-bar"><div class="skill-progress"></div></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Values Section -->
+        <section class="values-section">
+            <div class="values-grid">
+                <div class="value-card premium-card reveal slide-right">
+                    <div class="value-icon"><i class="fas fa-gem"></i></div>
+                    <div class="value-text">
+                        <span>Vision</span>
+                        <h4>Success & Growth</h4>
+                    </div>
+                </div>
+                <div class="value-card premium-card reveal zoom-in delay-1">
+                    <div class="value-icon"><i class="fas fa-handshake"></i></div>
+                    <div class="value-text">
+                        <span>Network</span>
+                        <h4>Real Connections</h4>
+                    </div>
+                </div>
+                <div class="value-card premium-card reveal slide-left delay-2">
+                    <div class="value-icon"><i class="fas fa-star"></i></div>
+                    <div class="value-text">
+                        <span>Character</span>
+                        <h4>Mutual Respect</h4>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Connect Section -->
+        <section id="connect" class="connect-section">
+            <h2 class="section-title reveal zoom-in">Get in Touch</h2>
+            <div class="social-links-grid">
+                <a id="btn-tg-dm" href="#" target="_blank" class="premium-btn reveal slide-up">
+                    <i class="fab fa-telegram-plane"></i> <span>Direct Message</span>
+                </a>
+                <a id="btn-tg-channel" href="#" target="_blank" class="premium-btn reveal slide-up delay-1">
+                    <i class="fas fa-bullhorn"></i> <span>Official Channel</span>
+                </a>
+                <a id="btn-insta" href="#" target="_blank" class="premium-btn reveal slide-up">
+                    <i class="fab fa-instagram"></i> <span>Instagram</span>
+                </a>
+                <a id="btn-backup" href="#" target="_blank" class="premium-btn reveal slide-up delay-1">
+                    <i class="fas fa-robot"></i> <span>Sunny Bot (Backup)</span>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">𝐒ᴜɴɴʏ.</div>
+            <p>&copy; 2026 Developer Portfolio</p>
+            <p class="built-with">Crafted with precision.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
