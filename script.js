@@ -1,10 +1,10 @@
-const CONFIG = {
-    LINKS: {
-        telegramDM: "https://t.me/SyroxZen",
+const CONFIG = { 
+    LINKS: { 
+        telegramDM: "https://t.me/SyroxZen", 
         telegramChannel: "https://t.me/SI_CODEX", 
-        instagram: "https://www.instagram.com/sunny_codex?stkn=MWgydGxhZDQwa2lxYw==",
-        limited: "https://t.me/Sunnybotmaker_bot"
-    }
+        instagram: "https://www.instagram.com/sunny_codex?stkn=MWgydGxhZDQwa2lxYw==", 
+        limited: "https://t.me/Sunnybotmaker_bot" 
+    } 
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -87,21 +87,24 @@ document.addEventListener("DOMContentLoaded", () => {
     // Static Twinkling Stars (Sky effect)
     const canvas = document.getElementById('star-canvas');
     const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth; 
-    canvas.height = window.innerHeight;
+    
+    function resizeCanvas() {
+        canvas.width = document.body.clientWidth;
+        canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
 
     let stars = [];
     class Star {
         constructor() {
             this.x = Math.random() * canvas.width;
             this.y = Math.random() * canvas.height;
-            this.size = Math.random() * 1.5 + 0.5; // Choto size
+            this.size = Math.random() * 1.5 + 0.5;
             this.opacity = Math.random();
             this.fadeDir = Math.random() > 0.5 ? 1 : -1;
             this.fadeSpeed = Math.random() * 0.015 + 0.005; 
         }
         update() {
-            // Shudhu opacity change hobe (twinkle effect), position ek thakbe
             this.opacity += this.fadeSpeed * this.fadeDir;
             if (this.opacity >= 1) {
                 this.opacity = 1;
@@ -110,23 +113,22 @@ document.addEventListener("DOMContentLoaded", () => {
             if (this.opacity <= 0.1) {
                 this.opacity = 0.1;
                 this.fadeDir = 1;
-                // Ektu position change kora jete pare jate random lage, but static rakhte chaile evabei thakbe
             }
         }
         draw() {
-            ctx.fillStyle = `rgba(255, 215, 0, ${this.opacity})`; // Yellow star color
+            ctx.fillStyle = `rgba(255, 215, 0, ${this.opacity})`;
             ctx.shadowBlur = 6;
-            ctx.shadowColor = `rgba(229, 192, 92, ${this.opacity})`; // Glowing shadow
+            ctx.shadowColor = `rgba(229, 192, 92, ${this.opacity})`;
             ctx.beginPath(); 
             ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); 
             ctx.fill();
-            ctx.shadowBlur = 0; // Performance er jonno reset
+            ctx.shadowBlur = 0; 
         }
     }
 
     function initStars() { 
         stars = []; 
-        const starCount = window.innerWidth < 768 ? 100 : 250; // Beshi number of stars
+        const starCount = window.innerWidth < 768 ? 100 : 250;
         for (let i=0; i<starCount; i++) stars.push(new Star()); 
     }
     
@@ -137,5 +139,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
     initStars(); animateStars();
-    window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; initStars(); });
+    
+    window.addEventListener('resize', () => { 
+        resizeCanvas();
+        initStars(); 
+    });
 });
