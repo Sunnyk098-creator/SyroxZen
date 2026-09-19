@@ -13,19 +13,28 @@
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+
+html { 
+    scroll-behavior: smooth; 
+    background-color: var(--bg-dark); /* White line fix */
+    overflow-x: hidden; /* Side scroll fix */
+    width: 100%;
+}
+
 body {
     background-color: var(--bg-dark);
     color: var(--text-primary);
     font-family: var(--font-sans);
-    overflow-x: hidden;
+    overflow-x: hidden; /* Side scroll fix */
+    width: 100%;
+    position: relative;
     line-height: 1.6;
 }
 
 /* ==========================================================================
    Static Stars Canvas
    ========================================================================== */
-#star-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -2; pointer-events: none; }
+#star-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: -2; pointer-events: none; }
 
 /* ==========================================================================
    Scroll Reveal Animations
@@ -39,7 +48,7 @@ body {
 .delay-1 { transition-delay: 0.15s; } .delay-2 { transition-delay: 0.3s; }
 
 /* ==========================================================================
-   Cards & UI Components (Improved)
+   Cards & UI Components
    ========================================================================== */
 .premium-card {
     background: var(--card-bg);
@@ -62,7 +71,7 @@ body {
 .mobile-menu-btn { display: none; background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer; }
 
 /* Hero Section (DP Glowing Circle) */
-main { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+main { max-width: 1200px; margin: 0 auto; padding: 0 2rem; overflow-x: hidden; }
 .hero-section { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding-top: 100px; text-align: center; }
 .hero-content { display: flex; flex-direction: column; align-items: center; width: 100%; }
 .profile-wrapper { position: relative; width: 170px; height: 170px; margin-bottom: 2rem; }
@@ -92,10 +101,10 @@ main { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
 .window-dots span:nth-child(2) { background: #ffbd2e; }
 .window-dots span:nth-child(3) { background: #27c93f; }
 .window-title { margin: 0 auto; font-family: var(--font-sans); font-size: 0.85rem; color: var(--text-secondary); }
-.window-body { padding: 2rem; font-family: var(--font-mono); font-size: 0.95rem; line-height: 1.7; }
+.window-body { padding: 2rem; font-family: var(--font-mono); font-size: 0.95rem; line-height: 1.7; overflow-x: auto; }
 .keyword { color: #ff7b72; } .variable { color: #79c0ff; } .property { color: #d2a8ff; } .string { color: #a5d6ff; }
 
-/* Bento Grid (Fixes applied here for better cards) */
+/* Bento Grid */
 .intro-section { padding: 6rem 0; }
 .welcome-card { padding: 3rem; text-align: center; margin-bottom: 3rem; border: 1px solid var(--accent); box-shadow: 0 0 25px rgba(229, 192, 92, 0.15); }
 .welcome-card h2 { font-size: 2rem; color: var(--accent); margin-bottom: 1rem; }
@@ -115,7 +124,7 @@ main { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 }
 .bento-card:hover { border-color: var(--accent); transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.5), inset 0 0 20px rgba(229,192,92,0.05); }
-.card-icon-wrapper { width: 50px; height: 50px; background: rgba(229, 192, 92, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+.card-icon-wrapper { min-width: 50px; width: 50px; height: 50px; background: rgba(229, 192, 92, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; }
 .card-icon-wrapper i { font-size: 1.4rem; color: var(--accent); }
 .bento-card span { font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1.2px; display: block; margin-bottom: 4px; }
 .bento-card h4 { font-size: 1.1rem; color: #fff; font-weight: 500; }
@@ -158,4 +167,3 @@ footer { padding: 4rem 0 2rem; text-align: center; border-top: 1px solid rgba(25
     .premium-title { font-size: 2.5rem; }
     .bento-grid, .values-grid { grid-template-columns: 1fr; }
 }
-;
