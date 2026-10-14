@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Chatrix — Admin Console</title>
+    <title>Chatrix HQ — Admin Console</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
@@ -21,10 +21,10 @@
         }
     </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap');
         * { -webkit-tap-highlight-color: transparent; }
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: #080c14;
             color: #f8fafc;
             user-select: none;
@@ -57,8 +57,8 @@
                 <i class="fas fa-shield-halved text-2xl text-white"></i>
             </div>
             <div>
-                <h2 class="text-xl font-black tracking-tight text-white">Master Admin Login</h2>
-                <p class="text-xs text-gray-400 mt-1">Authorized personnel only</p>
+                <h2 class="text-xl font-black tracking-tight text-white">Chatrix HQ Console</h2>
+                <p class="text-xs text-gray-400 mt-1">Direct Secure API Gate</p>
             </div>
 
             <form id="admin-login-form" class="space-y-3.5 text-left">
@@ -75,7 +75,7 @@
                         </button>
                     </div>
                 </div>
-                <button type="submit" class="w-full py-3.5 mt-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-2xl font-bold text-xs shadow-lg shadow-blue-500/30 btn-press transition-all">
+                <button type="submit" id="login-submit-btn" class="w-full py-3.5 mt-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-2xl font-bold text-xs shadow-lg shadow-blue-500/30 btn-press transition-all">
                     Unlock Console
                 </button>
             </form>
@@ -96,9 +96,9 @@
                 </div>
                 <div>
                     <h1 class="text-sm font-black text-white flex items-center gap-1.5 leading-tight">
-                        Chatrix <span class="text-[9px] bg-blue-500/20 text-blue-400 font-black px-1.5 py-0.5 rounded-full border border-blue-500/30">HQ</span>
+                        Chatrix <span class="text-[9px] bg-blue-500/20 text-blue-400 font-black px-1.5 py-0.5 rounded-full border border-blue-500/30">API HQ</span>
                     </h1>
-                    <p class="text-[10px] text-gray-400 font-medium">Realtime Database System</p>
+                    <p class="text-[10px] text-gray-400 font-medium">Serverless Controlled</p>
                 </div>
             </div>
 
@@ -224,24 +224,24 @@
                     <div class="glass-panel p-5 rounded-3xl flex flex-col justify-between">
                         <div>
                             <h3 class="text-xs font-black uppercase text-gray-400 tracking-wider flex items-center gap-2 mb-2">
-                                <i class="fas fa-server text-blue-400"></i> System Configuration
+                                <i class="fas fa-server text-blue-400"></i> Secure API Infrastructure
                             </h3>
-                            <p class="text-xs text-gray-300 leading-relaxed font-medium">Chatrix Realtime Database node connected directly to production endpoint.</p>
+                            <p class="text-xs text-gray-300 leading-relaxed font-medium">All database queries are executed server-side via Serverless APIs. No database keys are stored in the client browser.</p>
                             <div class="mt-3 p-3 bg-black/40 rounded-2xl border border-white/5 text-[11px] font-mono text-gray-400 space-y-1">
-                                <div>PROJECT: <span class="text-white font-bold">chatrix-5d023</span></div>
-                                <div>APP_ID: <span class="text-blue-400 font-bold">chatrix-app</span></div>
-                                <div>SUPPORT LINK: <span class="text-purple-400 font-bold truncate block">https://chatrix-web.vercel.app</span></div>
+                                <div>ENDPOINT: <span class="text-emerald-400 font-bold">/api/manage</span></div>
+                                <div>PROTOCOL: <span class="text-blue-400 font-bold">Encrypted Token Headers</span></div>
+                                <div>TARGET APP: <span class="text-purple-400 font-bold truncate block">https://chatrix-web.vercel.app</span></div>
                             </div>
                         </div>
                         <div class="mt-3 pt-3 border-t border-white/5 flex items-center justify-between">
-                            <span class="text-[10px] text-gray-400 font-bold">DATABASE STATUS</span>
-                            <span class="text-[10px] bg-emerald-500/20 text-emerald-400 font-black px-2.5 py-0.5 rounded-full border border-emerald-500/30">ONLINE & SYNCED</span>
+                            <span class="text-[10px] text-gray-400 font-bold">API GATEWAY</span>
+                            <span class="text-[10px] bg-emerald-500/20 text-emerald-400 font-black px-2.5 py-0.5 rounded-full border border-emerald-500/30">PROTECTED & ONLINE</span>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- TAB 2: PREMIUM BUY REQUESTS QUEUE (NEW FEATURE) -->
+            <!-- TAB 2: PREMIUM BUY REQUESTS QUEUE -->
             <section id="view-requests" class="tab-view hidden space-y-3.5">
                 <div class="glass-panel p-4 rounded-3xl flex items-center justify-between">
                     <div>
@@ -250,6 +250,7 @@
                         </h2>
                         <p class="text-[11px] text-gray-400 font-medium">Verify UTR and activate VIP badge directly</p>
                     </div>
+                    <button onclick="window.refreshAllData()" class="px-3 py-1.5 bg-slate-800 text-xs text-gray-300 font-bold rounded-xl btn-press"><i class="fas fa-rotate-right mr-1"></i> Refresh</button>
                 </div>
                 <div id="premium-requests-list" class="space-y-2.5">
                     <!-- Loaded dynamically -->
@@ -279,6 +280,7 @@
                         </h2>
                         <p class="text-[11px] text-gray-400 font-medium">Review and reinstate banned accounts</p>
                     </div>
+                    <button onclick="window.refreshAllData()" class="px-3 py-1.5 bg-slate-800 text-xs text-gray-300 font-bold rounded-xl btn-press"><i class="fas fa-rotate-right mr-1"></i> Refresh</button>
                 </div>
                 <div id="appeals-list-container" class="space-y-2.5">
                     <!-- Loaded dynamically -->
@@ -348,7 +350,6 @@
     <!-- 3. LOCKED SUPPORT DESK IFRAME OVERLAY                     -->
     <!-- ======================================================== -->
     <div id="support-iframe-overlay" class="fixed inset-0 z-[2000] hidden flex-col bg-slate-950">
-        <!-- Header Bar with Back Button -->
         <div class="px-4 py-3 glass-panel border-b border-white/10 flex items-center justify-between shrink-0">
             <div class="flex items-center gap-2.5">
                 <button onclick="window.closeSupportIframe()" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 btn-press">
@@ -361,7 +362,6 @@
                 </div>
             </div>
 
-            <!-- Reload & External Link -->
             <div class="flex items-center gap-1.5">
                 <button onclick="document.getElementById('support-frame').src='https://chatrix-web.vercel.app';" class="w-8 h-8 rounded-xl bg-slate-800 text-gray-300 hover:text-white flex items-center justify-center text-xs btn-press" title="Reload App">
                     <i class="fas fa-rotate-right"></i>
@@ -372,7 +372,6 @@
             </div>
         </div>
 
-        <!-- Locked Web App Frame -->
         <div class="flex-1 w-full h-full relative bg-black">
             <iframe id="support-frame" src="" class="w-full h-full border-0" allow="camera; microphone; clipboard-read; clipboard-write; autoplay; fullscreen;"></iframe>
         </div>
@@ -392,64 +391,14 @@
     </div>
 
     <!-- ======================================================== -->
-    <!-- FIREBASE REALTIME ENGINE & LOGIC                          -->
+    <!-- CLIENT API COMMUNICATION ENGINE                          -->
     <!-- ======================================================== -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { 
-            getDatabase, ref, set, get, child, onValue, update, remove, push 
-        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
-
-        // CONFIG EXACTLY AS PROVIDED
-        const firebaseConfig = {
-            apiKey: "AIzaSyAc37QaaKUU7E19WMUJTDAA90kWHBstUls",
-            authDomain: "chatrix-5d023.firebaseapp.com",
-            databaseURL: "https://chatrix-5d023-default-rtdb.firebaseio.com",
-            projectId: "chatrix-5d023",
-            storageBucket: "chatrix-5d023.firebasestorage.app",
-            messagingSenderId: "263807610366",
-            appId: "1:263807610366:web:fdbb53fffd3ab2a9b664af"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-
-        const APP_ID = 'chatrix-app';
-        const OFFICIAL_SYSTEM_UID = 'chatrix_official';
-        const dbUsersPath = `artifacts/${APP_ID}/users`;
-        const dbAppealsPath = `artifacts/${APP_ID}/appeals`;
-        const dbSettingsPath = `artifacts/${APP_ID}/settings`;
-        const dbChatsPath = `artifacts/${APP_ID}/chats`;
-        const dbUserChatsPath = `artifacts/${APP_ID}/userChats`;
-        const dbPremiumReqsPath = `artifacts/${APP_ID}/premium_requests`;
-
-        // STATE
+    <script>
+        const LOCKED_SUPPORT_URL = 'https://chatrix-web.vercel.app';
         let allUsers = {};
         let allAppeals = {};
         let allPremiumRequests = {};
         let currentTab = 'dashboard';
-
-        // LOCKED URL AS REQUESTED
-        const LOCKED_SUPPORT_URL = 'https://chatrix-web.vercel.app';
-
-        // MASTER PASSWORD (STRONG & EASY TO REMEMBER)
-        const MASTER_ADMIN_PASS = "Chatrix@Admin#2026";
-        const MASTER_ADMIN_USER = "admin";
-
-        // ENCRYPTION/DECRYPTION HELPERS
-        function decryptData(encodedText) {
-            if(!encodedText) return encodedText;
-            const str = String(encodedText);
-            if (str.startsWith("CTX:")) {
-                try { return decodeURIComponent(atob(str.substring(4))); } catch(e) { return str; }
-            }
-            try { return decodeURIComponent(atob(str)); } catch(e) { return str; }
-        }
-
-        function encryptData(text) {
-            if(!text) return text;
-            try { return "CTX:" + btoa(encodeURIComponent(String(text))); } catch(e) { return String(text); }
-        }
 
         window.showToast = function(msg, icon = 'check-circle', isError = false) {
             const toast = document.getElementById('toast');
@@ -459,38 +408,69 @@
             setTimeout(() => toast.classList.add('-translate-y-[200%]'), 2600);
         };
 
-        // ADMIN AUTH CHECK
+        // CENTRAL API CALLER
+        async function apiCall(action, payload = {}) {
+            const token = sessionStorage.getItem('chatrix_admin_token') || '';
+            const res = await fetch('/api/manage', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-admin-token': token
+                },
+                body: JSON.stringify({ action, ...payload })
+            });
+
+            const data = await res.json();
+            if (!res.ok) {
+                if (res.status === 403 || res.status === 401) {
+                    sessionStorage.removeItem('chatrix_admin_token');
+                    checkAdminSession();
+                }
+                throw new Error(data.error || 'Server request failed');
+            }
+            return data;
+        }
+
+        // AUTH CHECK
         function checkAdminSession() {
-            const isAuth = sessionStorage.getItem('chatrix_admin_logged') === 'true';
-            if (isAuth) {
+            const token = sessionStorage.getItem('chatrix_admin_token');
+            if (token) {
                 document.getElementById('admin-auth-screen').classList.add('hidden');
                 document.getElementById('admin-main-console').classList.remove('hidden');
-                initRealtimeListeners();
+                window.refreshAllData();
             } else {
                 document.getElementById('admin-auth-screen').classList.remove('hidden');
                 document.getElementById('admin-main-console').classList.add('hidden');
             }
         }
 
-        document.getElementById('admin-login-form')?.addEventListener('submit', (e) => {
+        document.getElementById('admin-login-form')?.addEventListener('submit', async (e) => {
             e.preventDefault();
+            const btn = document.getElementById('login-submit-btn');
+            const errEl = document.getElementById('login-error-msg');
             const user = document.getElementById('admin-user-input').value.trim();
             const pass = document.getElementById('admin-pass-input').value.trim();
-            const errEl = document.getElementById('login-error-msg');
 
-            if ((user === MASTER_ADMIN_USER || user === 'chatrix_admin') && pass === MASTER_ADMIN_PASS) {
-                sessionStorage.setItem('chatrix_admin_logged', 'true');
-                errEl.classList.add('hidden');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Authenticating...';
+            errEl.classList.add('hidden');
+
+            try {
+                const res = await apiCall('login', { username: user, password: pass });
+                sessionStorage.setItem('chatrix_admin_token', res.token);
                 checkAdminSession();
                 window.showToast("Welcome to Chatrix HQ", "shield-check");
-            } else {
-                errEl.innerText = "Invalid Admin Credentials!";
+            } catch (err) {
+                errEl.innerText = err.message || "Invalid Admin Credentials!";
                 errEl.classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "Unlock Console";
             }
         });
 
         window.adminLogout = function() {
-            sessionStorage.removeItem('chatrix_admin_logged');
+            sessionStorage.removeItem('chatrix_admin_token');
             checkAdminSession();
             window.showToast("Logged out safely");
         };
@@ -507,48 +487,44 @@
             }
         };
 
-        // ==========================================
-        // REALTIME LISTENERS
-        // ==========================================
-        function initRealtimeListeners() {
-            // 1. Users
-            onValue(ref(db, dbUsersPath), (snap) => {
-                allUsers = snap.exists() ? snap.val() : {};
-                renderAllData();
-            });
+        // FETCH ALL DATA VIA API
+        window.refreshAllData = async function() {
+            try {
+                const data = await apiCall('get-all-data');
+                allUsers = data.users || {};
+                allAppeals = data.appeals || {};
+                allPremiumRequests = data.premiumRequests || {};
 
-            // 2. Appeals
-            onValue(ref(db, dbAppealsPath), (snap) => {
-                allAppeals = snap.exists() ? snap.val() : {};
-                renderAllData();
-            });
-
-            // 3. Maintenance
-            onValue(ref(db, `${dbSettingsPath}/maintenance`), (snap) => {
-                const isMaint = snap.exists() && snap.val() === true;
+                // Update maintenance UI
+                const isMaint = data.settings?.maintenance === true;
                 const toggle = document.getElementById('maintenance-toggle');
                 const dot = document.getElementById('maintenance-dot');
                 if (toggle) toggle.checked = isMaint;
-                if (dot) {
-                    dot.className = isMaint 
-                        ? "w-2 h-2 rounded-full bg-red-500 animate-ping" 
-                        : "w-2 h-2 rounded-full bg-emerald-500 animate-pulse";
-                }
-            });
+                if (dot) dot.className = isMaint ? "w-2 h-2 rounded-full bg-red-500 animate-ping" : "w-2 h-2 rounded-full bg-emerald-500 animate-pulse";
 
-            // 4. Premium Buy Requests Queue
-            onValue(ref(db, dbPremiumReqsPath), (snap) => {
-                allPremiumRequests = snap.exists() ? snap.val() : {};
-                renderPremiumRequests();
-                renderStats();
-            });
-        }
+                renderAllData();
+            } catch (err) {
+                window.showToast(err.message, "exclamation-circle", true);
+            }
+        };
 
-        // Toggle Maintenance Live
+        // Auto Poll every 8 seconds
+        setInterval(() => {
+            if (sessionStorage.getItem('chatrix_admin_token')) {
+                window.refreshAllData();
+            }
+        }, 8000);
+
+        // Maintenance Toggle
         document.getElementById('maintenance-toggle').onchange = async (e) => {
-            const val = e.target.checked;
-            await set(ref(db, `${dbSettingsPath}/maintenance`), val);
-            window.showToast(val ? "Maintenance Mode Activated" : "System Restored Online", val ? "exclamation-triangle" : "check-circle", val);
+            try {
+                const val = e.target.checked;
+                await apiCall('toggle-maintenance', { enabled: val });
+                window.showToast(val ? "Maintenance Mode Activated" : "System Restored Online", val ? "exclamation-triangle" : "check-circle", val);
+                window.refreshAllData();
+            } catch (err) {
+                window.showToast(err.message, "times", true);
+            }
         };
 
         function renderAllData() {
@@ -582,9 +558,6 @@
             }
         }
 
-        // ==========================================
-        // RENDER: USERS DIRECTORY
-        // ==========================================
         function renderUsers(filterQuery = '') {
             const container = document.getElementById('users-list-container');
             if (!container) return;
@@ -611,7 +584,7 @@
                 card.className = "glass-panel p-3.5 rounded-3xl flex flex-col justify-between space-y-3 hover:border-white/20 transition-all";
 
                 const isOnline = u.status && u.status.online;
-                const hasTick = Boolean(u.isPremium === true || uid === OFFICIAL_SYSTEM_UID);
+                const hasTick = Boolean(u.isPremium === true || uid === 'chatrix_official');
                 const tickColor = u.verifiedTickColor || 'text-blue-500';
                 const tickHtml = hasTick ? `<i class="fas fa-check-circle ${tickColor} text-xs ml-1"></i>` : '';
 
@@ -659,9 +632,7 @@
             renderUsers(e.target.value);
         });
 
-        // ==========================================
-        // RENDER: PREMIUM BUY REQUESTS QUEUE
-        // ==========================================
+        // RENDER PREMIUM REQUESTS
         function renderPremiumRequests() {
             const container = document.getElementById('premium-requests-list');
             if (!container) return;
@@ -706,65 +677,27 @@
         }
 
         window.approvePremiumRequest = async function(rId, uid) {
-            // 1. Grant Premium & Tick
-            await update(ref(db, `${dbUsersPath}/${uid}`), {
-                isPremium: true,
-                isVerified: true,
-                verifiedTickColor: 'text-blue-500'
-            });
-
-            // 2. Remove from requests queue
-            await remove(ref(db, `${dbPremiumReqsPath}/${rId}`));
-
-            // 3. Send Official Congratulations Message
-            const welcomeId = [OFFICIAL_SYSTEM_UID, uid].sort().join('_');
-            const now = Date.now();
-            const timeStr = new Date(now).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            
-            await push(ref(db, `${dbChatsPath}/${welcomeId}/messages`), {
-                senderId: OFFICIAL_SYSTEM_UID,
-                text: encryptData(`Payment Verified! 🌟\n\nCongratulations! Your account has been upgraded to Chatrix Premium VIP. You now have the verified badge and exclusive profile color access.`),
-                timestamp: now,
-                time: timeStr
-            });
-
-            await update(ref(db, `${dbUserChatsPath}/${uid}/${welcomeId}`), {
-                id: welcomeId,
-                targetUid: OFFICIAL_SYSTEM_UID,
-                name: 'Chatrix',
-                username: 'chatrix_official',
-                dp: 'https://placehold.co/150/2563eb/ffffff?text=CX',
-                isVerified: true,
-                isOfficial: true,
-                lastMessage: encryptData(`Premium VIP Activated! 🌟`),
-                timestamp: now,
-                unread: true
-            });
-
-            window.showToast("Premium VIP Activated for user!", "crown");
+            try {
+                await apiCall('approve-premium-request', { rId, uid });
+                window.showToast("Premium VIP Activated for user!", "crown");
+                window.refreshAllData();
+            } catch (err) {
+                window.showToast(err.message, "times", true);
+            }
         };
 
         window.rejectPremiumRequest = async function(rId, uid) {
             if (!confirm("Reject this premium payment request?")) return;
-            await remove(ref(db, `${dbPremiumReqsPath}/${rId}`));
-
-            const welcomeId = [OFFICIAL_SYSTEM_UID, uid].sort().join('_');
-            const now = Date.now();
-            const timeStr = new Date(now).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            
-            await push(ref(db, `${dbChatsPath}/${welcomeId}/messages`), {
-                senderId: OFFICIAL_SYSTEM_UID,
-                text: encryptData(`Payment Update: We could not verify your payment UTR. Please ensure the transaction succeeded and try again with the correct 12-digit number.`),
-                timestamp: now,
-                time: timeStr
-            });
-
-            window.showToast("Request dismissed");
+            try {
+                await apiCall('reject-premium-request', { rId, uid });
+                window.showToast("Request dismissed");
+                window.refreshAllData();
+            } catch (err) {
+                window.showToast(err.message, "times", true);
+            }
         };
 
-        // ==========================================
-        // RENDER: UNBAN APPEALS
-        // ==========================================
+        // RENDER APPEALS
         function renderAppeals() {
             const container = document.getElementById('appeals-list-container');
             if (!container) return;
@@ -807,26 +740,32 @@
         }
 
         window.approveAppeal = async function(uid) {
-            await window.unbanUser(uid);
-            await remove(ref(db, `${dbAppealsPath}/${uid}`));
-            window.showToast("Appeal approved and account reinstated!");
+            try {
+                await apiCall('approve-appeal', { uid });
+                window.showToast("Appeal approved and account reinstated!");
+                window.refreshAllData();
+            } catch (err) {
+                window.showToast(err.message, "times", true);
+            }
         };
 
         window.rejectAppeal = async function(uid) {
             if (!confirm("Dismiss this appeal? User will remain restricted.")) return;
-            await remove(ref(db, `${dbAppealsPath}/${uid}`));
-            window.showToast("Appeal dismissed");
+            try {
+                await apiCall('reject-appeal', { uid });
+                window.showToast("Appeal dismissed");
+                window.refreshAllData();
+            } catch (err) {
+                window.showToast(err.message, "times", true);
+            }
         };
 
-        // ==========================================
-        // RENDER: PREMIUM VIP MEMBERS & REMOVAL
-        // ==========================================
+        // RENDER PREMIUM VIP MEMBERS
         function renderPremiumUsers() {
             const container = document.getElementById('premium-list-container');
             if (!container) return;
 
             const premiumUids = Object.keys(allUsers).filter(uid => allUsers[uid].isPremium);
-
             if (premiumUids.length === 0) {
                 container.innerHTML = `<div class="col-span-full glass-panel p-8 rounded-3xl text-center text-gray-500 text-xs font-semibold">No active premium VIP members.</div>`;
                 return;
@@ -862,15 +801,12 @@
             });
         }
 
-        // ==========================================
-        // RENDER: BANNED USERS
-        // ==========================================
+        // RENDER BANNED USERS
         function renderBannedUsers() {
             const container = document.getElementById('banned-list-container');
             if (!container) return;
 
             const bannedUids = Object.keys(allUsers).filter(uid => allUsers[uid].isBanned);
-
             if (bannedUids.length === 0) {
                 container.innerHTML = `<div class="col-span-full glass-panel p-8 rounded-3xl text-center text-gray-500 text-xs font-semibold">No accounts currently banned.</div>`;
                 return;
@@ -893,7 +829,7 @@
 
                     <div class="flex items-center justify-between pt-2 border-t border-white/5">
                         <span class="text-[9px] text-gray-400 uppercase font-bold">${u.banExpiresAt ? 'Temp Restriction' : 'Permanent'}</span>
-                        <button onclick="window.unbanUser('${uid}')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition-all btn-press">
+                        <button onclick="window.unbanUser('${uid}')" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition-all btn-press">
                             <i class="fas fa-unlock mr-1"></i> Unban
                         </button>
                     </div>
@@ -902,56 +838,52 @@
             });
         }
 
-        // ==========================================
-        // DATABASE ACTIONS: BAN, UNBAN, REVOKE, DELETE
-        // ==========================================
-        window.promptBanUser = function(uid) {
+        // USER ACTIONS VIA API
+        window.promptBanUser = async function(uid) {
             const reason = prompt("Enter Ban Reason:", "Violation of Community Guidelines");
             if (reason === null) return;
-
             const isTemp = confirm("Is this a 2-Hour Temporary Ban? (Click Cancel for Permanent)");
-            const updates = {
-                isBanned: true,
-                banReason: reason.trim() || "Account restricted by administrator.",
-                banExpiresAt: isTemp ? (Date.now() + 2 * 60 * 60 * 1000) : null
-            };
 
-            update(ref(db, `${dbUsersPath}/${uid}`), updates).then(() => {
-                window.showToast("Account suspended directly in database", "ban", true);
-            });
+            try {
+                await apiCall('ban-user', { uid, reason: reason.trim(), isTemp });
+                window.showToast("Account suspended via API", "ban", true);
+                window.refreshAllData();
+            } catch (err) {
+                window.showToast(err.message, "times", true);
+            }
         };
 
         window.unbanUser = async function(uid) {
-            await update(ref(db, `${dbUsersPath}/${uid}`), {
-                isBanned: false,
-                banReason: null,
-                banExpiresAt: null
-            });
-            window.showToast("Account unbanned successfully!", "check-circle");
+            try {
+                await apiCall('unban-user', { uid });
+                window.showToast("Account unbanned successfully!", "check-circle");
+                window.refreshAllData();
+            } catch (err) {
+                window.showToast(err.message, "times", true);
+            }
         };
 
         window.revokePremium = async function(uid) {
-            if (!confirm("Revoke Premium VIP from this user? Tick and styling will be removed.")) return;
-            // TICK FIX: Set both isPremium and isVerified to false and clear tick colors
-            await update(ref(db, `${dbUsersPath}/${uid}`), {
-                isPremium: false,
-                isVerified: false,
-                verifiedTickColor: null,
-                profileGradient: null,
-                profilePatternIcon: null
-            });
-            window.showToast("VIP status & Tick removed");
+            if (!confirm("Revoke Premium VIP from this user?")) return;
+            try {
+                await apiCall('revoke-premium', { uid });
+                window.showToast("VIP status & Tick removed");
+                window.refreshAllData();
+            } catch (err) {
+                window.showToast(err.message, "times", true);
+            }
         };
 
         window.grantPremium = async function(uid) {
             const tickColor = prompt("Enter tick color (e.g. text-blue-500, text-amber-500, text-green-500):", "text-blue-500");
-            await update(ref(db, `${dbUsersPath}/${uid}`), {
-                isPremium: true,
-                isVerified: true,
-                verifiedTickColor: tickColor || "text-blue-500"
-            });
-            window.showToast("Premium VIP granted!", "crown");
-            window.openUserManageModal(uid);
+            try {
+                await apiCall('grant-premium', { uid, tickColor });
+                window.showToast("Premium VIP granted!", "crown");
+                window.openUserManageModal(uid);
+                window.refreshAllData();
+            } catch (err) {
+                window.showToast(err.message, "times", true);
+            }
         };
 
         window.openUserManageModal = function(uid) {
@@ -960,11 +892,11 @@
 
             const modal = document.getElementById('user-modal');
             const content = document.getElementById('modal-user-content');
-            const passPlain = decryptData(u.password);
+            const passPlain = u.decryptedPassword || '(Encrypted)';
 
             content.innerHTML = `
                 <div class="flex items-center gap-3 bg-black/40 p-3 rounded-2xl border border-white/5">
-                    <img src="${u.dp || 'https://placehold.co/100'}" class="w-12 h-12 rounded-2xl object-cover bg-slate-800">
+                    <img src="${u.dp || 'https://placehold.co/100'}" class="w-14 h-14 rounded-2xl object-cover bg-slate-800">
                     <div class="flex-1 min-w-0">
                         <h4 class="font-extrabold text-sm text-white">${u.name}</h4>
                         <p class="text-xs text-blue-400 font-bold">@${u.username}</p>
@@ -975,7 +907,7 @@
                 <div class="grid grid-cols-2 gap-2 text-xs">
                     <div class="bg-slate-800/80 p-2.5 rounded-2xl border border-white/5">
                         <span class="text-[9px] text-gray-400 font-bold block uppercase">Decrypted Password:</span>
-                        <span class="font-mono font-bold text-emerald-400 select-all">${passPlain || '(None)'}</span>
+                        <span class="font-mono font-bold text-emerald-400 select-all">${passPlain}</span>
                     </div>
                     <div class="bg-slate-800/80 p-2.5 rounded-2xl border border-white/5">
                         <span class="text-[9px] text-gray-400 font-bold block uppercase">Account Status:</span>
@@ -1008,7 +940,7 @@
 
                 <div class="pt-2 border-t border-white/10 flex justify-between items-center">
                     <button onclick="window.deleteUserForever('${uid}')" class="py-2 text-red-500 hover:text-red-400 text-xs font-bold btn-press">
-                        <i class="fas fa-trash mr-1"></i> Delete Account
+                        <i class="fas fa-trash-alt mr-1"></i> Delete Account
                     </button>
                     <button onclick="document.getElementById('user-modal').classList.add('hidden')" class="py-2 px-4 bg-slate-800 text-gray-300 rounded-xl text-xs font-bold btn-press">
                         Close
@@ -1023,25 +955,29 @@
             const pass = document.getElementById('edit-pass-inp').value.trim();
             if (!name || !pass) return window.showToast("Fields cannot be empty", "times", true);
 
-            await update(ref(db, `${dbUsersPath}/${uid}`), {
-                name: name,
-                password: encryptData(pass)
-            });
-            window.showToast("User details updated in database!");
-            document.getElementById('user-modal').classList.add('hidden');
+            try {
+                await apiCall('edit-user', { uid, name, password: pass });
+                window.showToast("User details saved via API!");
+                document.getElementById('user-modal').classList.add('hidden');
+                window.refreshAllData();
+            } catch (err) {
+                window.showToast(err.message, "times", true);
+            }
         };
 
         window.deleteUserForever = async function(uid) {
             if (!confirm(`Permanently wipe @${uid} from database?`)) return;
-            await remove(ref(db, `${dbUsersPath}/${uid}`));
-            await remove(ref(db, `${dbAppealsPath}/${uid}`));
-            window.showToast("Account purged permanently");
-            document.getElementById('user-modal').classList.add('hidden');
+            try {
+                await apiCall('delete-user', { uid });
+                window.showToast("Account purged permanently");
+                document.getElementById('user-modal').classList.add('hidden');
+                window.refreshAllData();
+            } catch (err) {
+                window.showToast(err.message, "times", true);
+            }
         };
 
-        // ==========================================
-        // TAB NAVIGATION (MOBILE & DESKTOP DUAL SYNC)
-        // ==========================================
+        // TAB SWITCHER
         window.switchTab = function(tabName) {
             currentTab = tabName;
             const tabs = ['dashboard', 'requests', 'users', 'appeals', 'premium', 'banned'];
@@ -1054,17 +990,15 @@
                 }
             });
 
-            // Sync Desktop Nav
+            // Desktop Nav
             document.querySelectorAll('.nav-tab').forEach(b => {
                 const target = b.id.replace('nav-btn-', '');
-                if (target === tabName) {
-                    b.className = "nav-tab active px-4 py-2 rounded-2xl bg-blue-600 text-white text-xs font-bold flex items-center gap-2 btn-press";
-                } else {
-                    b.className = "nav-tab px-4 py-2 rounded-2xl bg-slate-900 text-gray-400 hover:text-white text-xs font-bold flex items-center gap-2 btn-press";
-                }
+                b.className = target === tabName 
+                    ? "nav-tab active px-4 py-2 rounded-2xl bg-blue-600 text-white text-xs font-bold flex items-center gap-2 btn-press"
+                    : "nav-tab px-4 py-2 rounded-2xl bg-slate-900 text-gray-400 hover:text-white text-xs font-bold flex items-center gap-2 btn-press";
             });
 
-            // Sync Mobile Nav
+            // Mobile Nav
             document.querySelectorAll('.mobile-nav-btn').forEach(b => {
                 if (b.dataset.target === tabName) {
                     b.classList.remove('text-gray-400');
@@ -1076,9 +1010,7 @@
             });
         };
 
-        // ==========================================
         // LOCKED SUPPORT IFRAME WINDOW
-        // ==========================================
         window.openSupportIframe = function() {
             const frame = document.getElementById('support-frame');
             frame.src = LOCKED_SUPPORT_URL;
@@ -1094,7 +1026,7 @@
             document.getElementById('support-frame').src = '';
         };
 
-        // Start session check on load
+        // Initialize session check on page load
         checkAdminSession();
     </script>
 </body>
