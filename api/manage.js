@@ -1,16 +1,18 @@
-// api/manage.js — Chatrix Serverless Admin Controller (App Check Safe)
+// api/manage.js — Chatrix Serverless Admin Controller with Enterprise Key
 
 const FIREBASE_DB_URL = "https://chatrix-5d023-default-rtdb.firebaseio.com";
 const APP_ID = "chatrix-app";
 const OFFICIAL_SYSTEM_UID = "chatrix_official";
+
+// RECAPTCHA ENTERPRISE SITE KEY (CONFIGURED)
+const RECAPTCHA_ENTERPRISE_SITE_KEY = "6LfZYu4tAAAAAHs1YX2n75VgPFXDo-yVn2D2TzNJ";
 
 // MASTER ADMIN CREDENTIALS
 const ADMIN_USER = "admin";
 const ADMIN_PASS = "Chatrix@Admin#2026";
 const ADMIN_SECRET_TOKEN = "CTX_ADMIN_SECRET_KEY_98372641098412_SECURE";
 
-// Optional Database Secret (Vercel Environment Variable ya direct string)
-// Firebase Console -> Project Settings -> Service Accounts -> Database Secrets
+// Optional Database Secret (Firebase Console -> Project Settings -> Service Accounts -> Database Secrets)
 const DB_SECRET = process.env.FIREBASE_DATABASE_SECRET || process.env.FIREBASE_DB_SECRET || "";
 
 // E2E Encryption / Decryption Helper (Server-side)
@@ -28,7 +30,7 @@ function encryptData(text) {
     try { return "CTX:" + Buffer.from(encodeURIComponent(String(text))).toString('base64'); } catch(e) { return String(text); }
 }
 
-// Firebase RTDB REST Helper (App Check Bypass via Auth Secret)
+// Firebase RTDB REST Helper
 async function firebaseFetch(path, method = 'GET', body = null) {
     const authQuery = DB_SECRET ? `?auth=${DB_SECRET}` : "";
     const url = `${FIREBASE_DB_URL}/artifacts/${APP_ID}/${path}.json${authQuery}`;
@@ -42,7 +44,7 @@ async function firebaseFetch(path, method = 'GET', body = null) {
 }
 
 export default async function handler(req, res) {
-    // Only allow POST
+    // Only allow POST requests
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method Not Allowed' });
     }
@@ -57,6 +59,7 @@ export default async function handler(req, res) {
                 return res.status(200).json({
                     success: true,
                     token: ADMIN_SECRET_TOKEN,
+                    recaptchaKey: RECAPTCHA_ENTERPRISE_SITE_KEY,
                     message: 'Admin Authentication Succeeded'
                 });
             } else {
@@ -64,7 +67,7 @@ export default async function handler(req, res) {
             }
         }
 
-        // 2. TOKEN SECURITY GATE: ALL OTHER ACTIONS REQUIRE TOKEN
+        // 2. TOKEN SECURITY GATE: ALL OTHER ACTIONS REQUIRE ADMIN TOKEN
         const token = req.headers['x-admin-token'] || req.headers['authorization'];
         if (token !== ADMIN_SECRET_TOKEN && token !== `Bearer ${ADMIN_SECRET_TOKEN}`) {
             return res.status(403).json({ error: 'Unauthorized: Access Restricted' });
@@ -94,7 +97,8 @@ export default async function handler(req, res) {
                     users: safeUsers,
                     appeals: appeals || {},
                     settings: settings || {},
-                    premiumRequests: requests || {}
+                    premiumRequests: requests || {},
+                    recaptchaKey: RECAPTCHA_ENTERPRISE_SITE_KEY
                 });
             }
 
