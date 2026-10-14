@@ -1,4 +1,4 @@
-// api/manage.js — Chatrix Serverless Admin Controller
+// api/manage.js — Chatrix Serverless Admin Controller (App Check Safe)
 
 const FIREBASE_DB_URL = "https://chatrix-5d023-default-rtdb.firebaseio.com";
 const APP_ID = "chatrix-app";
@@ -8,6 +8,10 @@ const OFFICIAL_SYSTEM_UID = "chatrix_official";
 const ADMIN_USER = "admin";
 const ADMIN_PASS = "Chatrix@Admin#2026";
 const ADMIN_SECRET_TOKEN = "CTX_ADMIN_SECRET_KEY_98372641098412_SECURE";
+
+// Optional Database Secret (Vercel Environment Variable ya direct string)
+// Firebase Console -> Project Settings -> Service Accounts -> Database Secrets
+const DB_SECRET = process.env.FIREBASE_DATABASE_SECRET || process.env.FIREBASE_DB_SECRET || "";
 
 // E2E Encryption / Decryption Helper (Server-side)
 function decryptData(encodedText) {
@@ -24,9 +28,10 @@ function encryptData(text) {
     try { return "CTX:" + Buffer.from(encodeURIComponent(String(text))).toString('base64'); } catch(e) { return String(text); }
 }
 
-// Firebase RTDB REST Helper
+// Firebase RTDB REST Helper (App Check Bypass via Auth Secret)
 async function firebaseFetch(path, method = 'GET', body = null) {
-    const url = `${FIREBASE_DB_URL}/artifacts/${APP_ID}/${path}.json`;
+    const authQuery = DB_SECRET ? `?auth=${DB_SECRET}` : "";
+    const url = `${FIREBASE_DB_URL}/artifacts/${APP_ID}/${path}.json${authQuery}`;
     const options = {
         method,
         headers: { 'Content-Type': 'application/json' }
