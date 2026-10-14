@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Chatrix — Admin Console</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#080c14',
+                        darkCard: '#0e1422',
+                        darkBorder: '#1e293b'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        * { -webkit-tap-highlight-color: transparent; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #080c14;
+            color: #f8fafc;
+            user-select: none;
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .btn-press:active { transform: scale(0.96); opacity: 0.9; }
+        .glass-panel {
+            background: rgba(14, 20, 34, 0.75);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+        }
+        .pb-safe { padding-bottom: env(safe-area-inset-bottom, 16px); }
+    </style>
+</head>
+<body class="bg-[#080c14] min-h-[100dvh] flex flex-col antialiased">
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed top-4 left-1/2 -translate-x-1/2 -translate-y-[200%] transition-transform duration-300 z-[9999] bg-slate-900/95 border border-slate-700 text-white px-5 py-3 rounded-full shadow-2xl flex items-center gap-2.5 text-xs font-bold backdrop-blur-md">
+        <span id="toast-icon"></span>
+        <span id="toast-msg">Alert</span>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- 1. ADMIN AUTHENTICATION GATE (LOGIN SCREEN)               -->
+    <!-- ======================================================== -->
+    <div id="admin-auth-screen" class="fixed inset-0 z-[1000] bg-[#080c14] flex flex-col items-center justify-center p-6">
+        <div class="w-full max-w-sm glass-panel p-7 rounded-[32px] shadow-2xl border border-white/10 text-center space-y-5">
+            <div class="w-16 h-16 rounded-3xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center mx-auto shadow-xl shadow-blue-500/30">
+                <i class="fas fa-shield-halved text-2xl text-white"></i>
+            </div>
+            <div>
+                <h2 class="text-xl font-black tracking-tight text-white">Master Admin Login</h2>
+                <p class="text-xs text-gray-400 mt-1">Authorized personnel only</p>
+            </div>
+
+            <form id="admin-login-form" class="space-y-3.5 text-left">
+                <div>
+                    <label class="text-[10px] font-bold uppercase tracking-wider text-gray-400 block mb-1">Username</label>
+                    <input type="text" id="admin-user-input" required placeholder="admin" class="w-full px-4 py-3 bg-slate-900/80 border border-white/10 rounded-2xl text-xs text-white outline-none focus:border-blue-500 transition-all font-medium">
+                </div>
+                <div>
+                    <label class="text-[10px] font-bold uppercase tracking-wider text-gray-400 block mb-1">Master Password</label>
+                    <div class="relative">
+                        <input type="password" id="admin-pass-input" required placeholder="••••••••••••" class="w-full px-4 py-3 bg-slate-900/80 border border-white/10 rounded-2xl text-xs text-white outline-none focus:border-blue-500 transition-all font-medium pr-10">
+                        <button type="button" onclick="window.toggleAdminPassVisibility()" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs">
+                            <i id="pass-eye-icon" class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <button type="submit" class="w-full py-3.5 mt-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-2xl font-bold text-xs shadow-lg shadow-blue-500/30 btn-press transition-all">
+                    Unlock Console
+                </button>
+            </form>
+            <div id="login-error-msg" class="text-red-400 text-[11px] font-bold hidden bg-red-500/10 p-2.5 rounded-xl border border-red-500/20"></div>
+        </div>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- 2. MAIN ADMIN CONSOLE SHELL                              -->
+    <!-- ======================================================== -->
+    <div id="admin-main-console" class="hidden flex-1 flex flex-col pb-24 md:pb-6">
+        
+        <!-- TOP APP BAR -->
+        <header class="sticky top-0 z-40 glass-panel border-b border-white/10 px-4 md:px-6 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center shadow-md shadow-blue-500/20">
+                    <i class="fas fa-shield-halved text-white text-sm"></i>
+                </div>
+                <div>
+                    <h1 class="text-sm font-black text-white flex items-center gap-1.5 leading-tight">
+                        Chatrix <span class="text-[9px] bg-blue-500/20 text-blue-400 font-black px-1.5 py-0.5 rounded-full border border-blue-500/30">HQ</span>
+                    </h1>
+                    <p class="text-[10px] text-gray-400 font-medium">Realtime Database System</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <!-- Maintenance Switch -->
+                <div class="flex items-center gap-1.5 bg-slate-900/90 px-2.5 py-1.5 rounded-2xl border border-white/5">
+                    <span id="maintenance-dot" class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span class="text-[10px] font-bold text-gray-300 hidden sm:inline">Maintenance</span>
+                    <label class="relative inline-flex items-center cursor-pointer ml-1">
+                        <input type="checkbox" id="maintenance-toggle" class="sr-only peer">
+                        <div class="w-8 h-4 bg-gray-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-red-600"></div>
+                    </label>
+                </div>
+
+                <!-- Locked Support Window Button -->
+                <button onclick="window.openSupportIframe()" class="px-3 py-1.5 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-2xl text-[11px] font-bold flex items-center gap-1.5 shadow-md btn-press">
+                    <i class="fas fa-headset text-xs"></i> <span class="hidden sm:inline">Support</span>
+                </button>
+
+                <!-- Logout -->
+                <button onclick="window.adminLogout()" class="w-8 h-8 rounded-2xl bg-slate-800 text-gray-400 hover:text-red-400 flex items-center justify-center text-xs btn-press" title="Logout">
+                    <i class="fas fa-power-off"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- DESKTOP TOP NAV TABS (HIDDEN ON SMALL MOBILE) -->
+        <nav class="hidden md:flex items-center gap-2 px-6 pt-4 border-b border-white/10 overflow-x-auto no-scrollbar">
+            <button onclick="window.switchTab('dashboard')" id="nav-btn-dashboard" class="nav-tab active px-4 py-2 rounded-2xl bg-blue-600 text-white text-xs font-bold flex items-center gap-2 btn-press">
+                <i class="fas fa-chart-pie"></i> Dashboard
+            </button>
+            <button onclick="window.switchTab('requests')" id="nav-btn-requests" class="nav-tab px-4 py-2 rounded-2xl bg-slate-900 text-gray-400 hover:text-white text-xs font-bold flex items-center gap-2 btn-press">
+                <i class="fas fa-crown text-amber-400"></i> Premium Requests (<span id="tab-req-badge">0</span>)
+            </button>
+            <button onclick="window.switchTab('users')" id="nav-btn-users" class="nav-tab px-4 py-2 rounded-2xl bg-slate-900 text-gray-400 hover:text-white text-xs font-bold flex items-center gap-2 btn-press">
+                <i class="fas fa-users-viewfinder"></i> Find & Manage Users
+            </button>
+            <button onclick="window.switchTab('appeals')" id="nav-btn-appeals" class="nav-tab px-4 py-2 rounded-2xl bg-slate-900 text-gray-400 hover:text-white text-xs font-bold flex items-center gap-2 btn-press">
+                <i class="fas fa-envelope-open-text"></i> Appeals (<span id="tab-appeal-badge">0</span>)
+            </button>
+            <button onclick="window.switchTab('premium')" id="nav-btn-premium" class="nav-tab px-4 py-2 rounded-2xl bg-slate-900 text-gray-400 hover:text-white text-xs font-bold flex items-center gap-2 btn-press">
+                <i class="fas fa-star text-amber-400"></i> VIP Members
+            </button>
+            <button onclick="window.switchTab('banned')" id="nav-btn-banned" class="nav-tab px-4 py-2 rounded-2xl bg-slate-900 text-gray-400 hover:text-white text-xs font-bold flex items-center gap-2 btn-press">
+                <i class="fas fa-user-slash text-red-400"></i> Banned Accounts
+            </button>
+        </nav>
+
+        <!-- CONTENT VIEWPORT -->
+        <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 space-y-4">
+
+            <!-- TAB 1: OVERVIEW DASHBOARD -->
+            <section id="view-dashboard" class="tab-view space-y-4">
+                <!-- STATS CARDS -->
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                    <div class="glass-panel p-4 rounded-3xl relative overflow-hidden">
+                        <div class="flex items-center justify-between mb-1.5">
+                            <span class="text-[10px] font-extrabold uppercase text-gray-400">Total Users</span>
+                            <div class="w-7 h-7 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center text-xs"><i class="fas fa-users"></i></div>
+                        </div>
+                        <h3 class="text-2xl font-black text-white" id="stat-total-users">0</h3>
+                        <p class="text-[10px] text-gray-500">Live Accounts</p>
+                    </div>
+
+                    <div class="glass-panel p-4 rounded-3xl relative overflow-hidden">
+                        <div class="flex items-center justify-between mb-1.5">
+                            <span class="text-[10px] font-extrabold uppercase text-amber-400">Buy Requests</span>
+                            <div class="w-7 h-7 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xs"><i class="fas fa-credit-card"></i></div>
+                        </div>
+                        <h3 class="text-2xl font-black text-amber-400" id="stat-pending-requests">0</h3>
+                        <p class="text-[10px] text-gray-500">Awaiting Approval</p>
+                    </div>
+
+                    <div class="glass-panel p-4 rounded-3xl relative overflow-hidden">
+                        <div class="flex items-center justify-between mb-1.5">
+                            <span class="text-[10px] font-extrabold uppercase text-red-400">Banned</span>
+                            <div class="w-7 h-7 rounded-xl bg-red-500/20 text-red-400 flex items-center justify-center text-xs"><i class="fas fa-ban"></i></div>
+                        </div>
+                        <h3 class="text-2xl font-black text-red-400" id="stat-total-banned">0</h3>
+                        <p class="text-[10px] text-gray-500">Restricted</p>
+                    </div>
+
+                    <div class="glass-panel p-4 rounded-3xl relative overflow-hidden">
+                        <div class="flex items-center justify-between mb-1.5">
+                            <span class="text-[10px] font-extrabold uppercase text-emerald-400">Appeals</span>
+                            <div class="w-7 h-7 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs"><i class="fas fa-gavel"></i></div>
+                        </div>
+                        <h3 class="text-2xl font-black text-emerald-400" id="stat-total-appeals">0</h3>
+                        <p class="text-[10px] text-gray-500">Pending Reviews</p>
+                    </div>
+                </div>
+
+                <!-- QUICK ACTIONS & SYSTEM STATUS -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                    <div class="glass-panel p-5 rounded-3xl space-y-3">
+                        <h3 class="text-xs font-black uppercase text-gray-400 tracking-wider flex items-center gap-2">
+                            <i class="fas fa-bolt text-yellow-400"></i> Quick Actions
+                        </h3>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="window.switchTab('requests')" class="p-3 bg-slate-900 hover:bg-slate-800 rounded-2xl border border-white/5 text-left btn-press">
+                                <i class="fas fa-crown text-amber-400 text-lg mb-1 block"></i>
+                                <span class="font-bold text-xs text-white block">Review Buys</span>
+                                <span class="text-[10px] text-gray-400">Approve VIP UTR</span>
+                            </button>
+                            <button onclick="window.switchTab('appeals')" class="p-3 bg-slate-900 hover:bg-slate-800 rounded-2xl border border-white/5 text-left btn-press">
+                                <i class="fas fa-gavel text-emerald-400 text-lg mb-1 block"></i>
+                                <span class="font-bold text-xs text-white block">Review Appeals</span>
+                                <span class="text-[10px] text-gray-400">Unban requests</span>
+                            </button>
+                            <button onclick="window.openSupportIframe()" class="p-3 bg-slate-900 hover:bg-slate-800 rounded-2xl border border-white/5 text-left btn-press">
+                                <i class="fas fa-globe text-purple-400 text-lg mb-1 block"></i>
+                                <span class="font-bold text-xs text-white block">Open Web App</span>
+                                <span class="text-[10px] text-gray-400">Chatrix Live Link</span>
+                            </button>
+                            <button onclick="window.switchTab('users')" class="p-3 bg-slate-900 hover:bg-slate-800 rounded-2xl border border-white/5 text-left btn-press">
+                                <i class="fas fa-search text-blue-400 text-lg mb-1 block"></i>
+                                <span class="font-bold text-xs text-white block">Find User</span>
+                                <span class="text-[10px] text-gray-400">Credentials & edit</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel p-5 rounded-3xl flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-xs font-black uppercase text-gray-400 tracking-wider flex items-center gap-2 mb-2">
+                                <i class="fas fa-server text-blue-400"></i> System Configuration
+                            </h3>
+                            <p class="text-xs text-gray-300 leading-relaxed font-medium">Chatrix Realtime Database node connected directly to production endpoint.</p>
+                            <div class="mt-3 p-3 bg-black/40 rounded-2xl border border-white/5 text-[11px] font-mono text-gray-400 space-y-1">
+                                <div>PROJECT: <span class="text-white font-bold">chatrix-5d023</span></div>
+                                <div>APP_ID: <span class="text-blue-400 font-bold">chatrix-app</span></div>
+                                <div>SUPPORT LINK: <span class="text-purple-400 font-bold truncate block">https://chatrix-web.vercel.app</span></div>
+                            </div>
+                        </div>
+                        <div class="mt-3 pt-3 border-t border-white/5 flex items-center justify-between">
+                            <span class="text-[10px] text-gray-400 font-bold">DATABASE STATUS</span>
+                            <span class="text-[10px] bg-emerald-500/20 text-emerald-400 font-black px-2.5 py-0.5 rounded-full border border-emerald-500/30">ONLINE & SYNCED</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 2: PREMIUM BUY REQUESTS QUEUE (NEW FEATURE) -->
+            <section id="view-requests" class="tab-view hidden space-y-3.5">
+                <div class="glass-panel p-4 rounded-3xl flex items-center justify-between">
+                    <div>
+                        <h2 class="text-sm font-black text-white flex items-center gap-2">
+                            <i class="fas fa-crown text-amber-400"></i> Premium Buy Requests
+                        </h2>
+                        <p class="text-[11px] text-gray-400 font-medium">Verify UTR and activate VIP badge directly</p>
+                    </div>
+                </div>
+                <div id="premium-requests-list" class="space-y-2.5">
+                    <!-- Loaded dynamically -->
+                </div>
+            </section>
+
+            <!-- TAB 3: FIND & MANAGE USERS -->
+            <section id="view-users" class="tab-view hidden space-y-3.5">
+                <div class="glass-panel p-3.5 rounded-3xl flex flex-col sm:flex-row gap-2.5 items-center justify-between">
+                    <div class="relative w-full sm:w-96">
+                        <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+                        <input type="text" id="user-search-input" placeholder="Search by name, @username, or UID..." class="w-full bg-slate-900 border border-white/10 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-gray-500 outline-none focus:border-blue-500 transition-all font-medium">
+                    </div>
+                    <span class="text-[11px] text-gray-400 font-semibold" id="users-filtered-count">Loading...</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3" id="users-list-container">
+                    <!-- Loaded dynamically -->
+                </div>
+            </section>
+
+            <!-- TAB 4: UNBAN APPEALS REVIEW -->
+            <section id="view-appeals" class="tab-view hidden space-y-3.5">
+                <div class="glass-panel p-4 rounded-3xl flex items-center justify-between">
+                    <div>
+                        <h2 class="text-sm font-black text-white flex items-center gap-2">
+                            <i class="fas fa-gavel text-emerald-400"></i> Ban Appeals Queue
+                        </h2>
+                        <p class="text-[11px] text-gray-400 font-medium">Review and reinstate banned accounts</p>
+                    </div>
+                </div>
+                <div id="appeals-list-container" class="space-y-2.5">
+                    <!-- Loaded dynamically -->
+                </div>
+            </section>
+
+            <!-- TAB 5: ACTIVE VIP MEMBERS -->
+            <section id="view-premium" class="tab-view hidden space-y-3.5">
+                <div class="glass-panel p-4 rounded-3xl flex items-center justify-between">
+                    <div>
+                        <h2 class="text-sm font-black text-white flex items-center gap-2">
+                            <i class="fas fa-star text-amber-400"></i> Active Premium VIP Users
+                        </h2>
+                        <p class="text-[11px] text-gray-400 font-medium">Accounts currently having verified tick & colors</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3" id="premium-list-container">
+                    <!-- Loaded dynamically -->
+                </div>
+            </section>
+
+            <!-- TAB 6: BANNED USERS -->
+            <section id="view-banned" class="tab-view hidden space-y-3.5">
+                <div class="glass-panel p-4 rounded-3xl flex items-center justify-between">
+                    <div>
+                        <h2 class="text-sm font-black text-white flex items-center gap-2">
+                            <i class="fas fa-user-slash text-red-400"></i> Banned Accounts Directory
+                        </h2>
+                        <p class="text-[11px] text-gray-400 font-medium">Users blocked by Administrator or Rate-Limits</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3" id="banned-list-container">
+                    <!-- Loaded dynamically -->
+                </div>
+            </section>
+        </main>
+
+        <!-- ======================================================== -->
+        <!-- MOBILE BOTTOM NAVIGATION BAR                              -->
+        <!-- ======================================================== -->
+        <div class="md:hidden fixed bottom-0 inset-x-0 glass-panel border-t border-white/10 flex justify-around items-center py-2 px-1 z-40 pb-safe">
+            <button onclick="window.switchTab('dashboard')" class="mobile-nav-btn active flex flex-col items-center p-1.5 w-1/5 text-blue-500 font-bold" data-target="dashboard">
+                <i class="fas fa-chart-pie text-base mb-0.5"></i>
+                <span class="text-[9px]">Dashboard</span>
+            </button>
+            <button onclick="window.switchTab('requests')" class="mobile-nav-btn flex flex-col items-center p-1.5 w-1/5 text-gray-400 font-bold relative" data-target="requests">
+                <i class="fas fa-crown text-base mb-0.5"></i>
+                <span class="text-[9px]">Requests</span>
+                <span id="mob-req-badge" class="hidden absolute top-0.5 right-4 w-2 h-2 rounded-full bg-amber-400"></span>
+            </button>
+            <button onclick="window.switchTab('users')" class="mobile-nav-btn flex flex-col items-center p-1.5 w-1/5 text-gray-400 font-bold" data-target="users">
+                <i class="fas fa-users text-base mb-0.5"></i>
+                <span class="text-[9px]">Users</span>
+            </button>
+            <button onclick="window.switchTab('appeals')" class="mobile-nav-btn flex flex-col items-center p-1.5 w-1/5 text-gray-400 font-bold" data-target="appeals">
+                <i class="fas fa-gavel text-base mb-0.5"></i>
+                <span class="text-[9px]">Appeals</span>
+            </button>
+            <button onclick="window.switchTab('banned')" class="mobile-nav-btn flex flex-col items-center p-1.5 w-1/5 text-gray-400 font-bold" data-target="banned">
+                <i class="fas fa-ban text-base mb-0.5"></i>
+                <span class="text-[9px]">Banned</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- 3. LOCKED SUPPORT DESK IFRAME OVERLAY                     -->
+    <!-- ======================================================== -->
+    <div id="support-iframe-overlay" class="fixed inset-0 z-[2000] hidden flex-col bg-slate-950">
+        <!-- Header Bar with Back Button -->
+        <div class="px-4 py-3 glass-panel border-b border-white/10 flex items-center justify-between shrink-0">
+            <div class="flex items-center gap-2.5">
+                <button onclick="window.closeSupportIframe()" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 btn-press">
+                    <i class="fas fa-arrow-left"></i> Back to Console
+                </button>
+                <div class="h-4 w-[1px] bg-white/20"></div>
+                <div class="flex items-center gap-1.5 text-xs font-bold text-white">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span class="truncate max-w-[150px] sm:max-w-none">Chatrix Web App</span>
+                </div>
+            </div>
+
+            <!-- Reload & External Link -->
+            <div class="flex items-center gap-1.5">
+                <button onclick="document.getElementById('support-frame').src='https://chatrix-web.vercel.app';" class="w-8 h-8 rounded-xl bg-slate-800 text-gray-300 hover:text-white flex items-center justify-center text-xs btn-press" title="Reload App">
+                    <i class="fas fa-rotate-right"></i>
+                </button>
+                <a href="https://chatrix-web.vercel.app" target="_blank" class="w-8 h-8 rounded-xl bg-purple-600/30 text-purple-300 border border-purple-500/30 flex items-center justify-center text-xs btn-press" title="Open external">
+                    <i class="fas fa-arrow-up-right-from-square"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Locked Web App Frame -->
+        <div class="flex-1 w-full h-full relative bg-black">
+            <iframe id="support-frame" src="" class="w-full h-full border-0" allow="camera; microphone; clipboard-read; clipboard-write; autoplay; fullscreen;"></iframe>
+        </div>
+    </div>
+
+    <!-- USER DETAILS & EDIT MODAL -->
+    <div id="user-modal" class="fixed inset-0 z-[1500] hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+        <div class="bg-slate-900 border border-white/10 w-full max-w-lg rounded-3xl p-5 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto no-scrollbar">
+            <div class="flex items-center justify-between pb-2 border-b border-white/10">
+                <h3 class="text-sm font-black text-white">User Intelligence & Actions</h3>
+                <button onclick="document.getElementById('user-modal').classList.add('hidden')" class="text-gray-400 hover:text-white p-1.5"><i class="fas fa-times text-base"></i></button>
+            </div>
+            <div id="modal-user-content" class="space-y-3.5">
+                <!-- User Details Loaded Dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- FIREBASE REALTIME ENGINE & LOGIC                          -->
+    <!-- ======================================================== -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { 
+            getDatabase, ref, set, get, child, onValue, update, remove, push 
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
+
+        // CONFIG EXACTLY AS PROVIDED
+        const firebaseConfig = {
+            apiKey: "AIzaSyAc37QaaKUU7E19WMUJTDAA90kWHBstUls",
+            authDomain: "chatrix-5d023.firebaseapp.com",
+            databaseURL: "https://chatrix-5d023-default-rtdb.firebaseio.com",
+            projectId: "chatrix-5d023",
+            storageBucket: "chatrix-5d023.firebasestorage.app",
+            messagingSenderId: "263807610366",
+            appId: "1:263807610366:web:fdbb53fffd3ab2a9b664af"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        const APP_ID = 'chatrix-app';
+        const OFFICIAL_SYSTEM_UID = 'chatrix_official';
+        const dbUsersPath = `artifacts/${APP_ID}/users`;
+        const dbAppealsPath = `artifacts/${APP_ID}/appeals`;
+        const dbSettingsPath = `artifacts/${APP_ID}/settings`;
+        const dbChatsPath = `artifacts/${APP_ID}/chats`;
+        const dbUserChatsPath = `artifacts/${APP_ID}/userChats`;
+        const dbPremiumReqsPath = `artifacts/${APP_ID}/premium_requests`;
+
+        // STATE
+        let allUsers = {};
+        let allAppeals = {};
+        let allPremiumRequests = {};
+        let currentTab = 'dashboard';
+
+        // LOCKED URL AS REQUESTED
+        const LOCKED_SUPPORT_URL = 'https://chatrix-web.vercel.app';
+
+        // MASTER PASSWORD (STRONG & EASY TO REMEMBER)
+        const MASTER_ADMIN_PASS = "Chatrix@Admin#2026";
+        const MASTER_ADMIN_USER = "admin";
+
+        // ENCRYPTION/DECRYPTION HELPERS
+        function decryptData(encodedText) {
+            if(!encodedText) return encodedText;
+            const str = String(encodedText);
+            if (str.startsWith("CTX:")) {
+                try { return decodeURIComponent(atob(str.substring(4))); } catch(e) { return str; }
+            }
+            try { return decodeURIComponent(atob(str)); } catch(e) { return str; }
+        }
+
+        function encryptData(text) {
+            if(!text) return text;
+            try { return "CTX:" + btoa(encodeURIComponent(String(text))); } catch(e) { return String(text); }
+        }
+
+        window.showToast = function(msg, icon = 'check-circle', isError = false) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = msg;
+            document.getElementById('toast-icon').innerHTML = `<i class="fas fa-${icon} ${isError ? 'text-red-400' : 'text-emerald-400'}"></i>`;
+            toast.classList.remove('-translate-y-[200%]');
+            setTimeout(() => toast.classList.add('-translate-y-[200%]'), 2600);
+        };
+
+        // ADMIN AUTH CHECK
+        function checkAdminSession() {
+            const isAuth = sessionStorage.getItem('chatrix_admin_logged') === 'true';
+            if (isAuth) {
+                document.getElementById('admin-auth-screen').classList.add('hidden');
+                document.getElementById('admin-main-console').classList.remove('hidden');
+                initRealtimeListeners();
+            } else {
+                document.getElementById('admin-auth-screen').classList.remove('hidden');
+                document.getElementById('admin-main-console').classList.add('hidden');
+            }
+        }
+
+        document.getElementById('admin-login-form')?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const user = document.getElementById('admin-user-input').value.trim();
+            const pass = document.getElementById('admin-pass-input').value.trim();
+            const errEl = document.getElementById('login-error-msg');
+
+            if ((user === MASTER_ADMIN_USER || user === 'chatrix_admin') && pass === MASTER_ADMIN_PASS) {
+                sessionStorage.setItem('chatrix_admin_logged', 'true');
+                errEl.classList.add('hidden');
+                checkAdminSession();
+                window.showToast("Welcome to Chatrix HQ", "shield-check");
+            } else {
+                errEl.innerText = "Invalid Admin Credentials!";
+                errEl.classList.remove('hidden');
+            }
+        });
+
+        window.adminLogout = function() {
+            sessionStorage.removeItem('chatrix_admin_logged');
+            checkAdminSession();
+            window.showToast("Logged out safely");
+        };
+
+        window.toggleAdminPassVisibility = function() {
+            const inp = document.getElementById('admin-pass-input');
+            const icon = document.getElementById('pass-eye-icon');
+            if (inp.type === 'password') {
+                inp.type = 'text';
+                icon.className = 'fas fa-eye-slash';
+            } else {
+                inp.type = 'password';
+                icon.className = 'fas fa-eye';
+            }
+        };
+
+        // ==========================================
+        // REALTIME LISTENERS
+        // ==========================================
+        function initRealtimeListeners() {
+            // 1. Users
+            onValue(ref(db, dbUsersPath), (snap) => {
+                allUsers = snap.exists() ? snap.val() : {};
+                renderAllData();
+            });
+
+            // 2. Appeals
+            onValue(ref(db, dbAppealsPath), (snap) => {
+                allAppeals = snap.exists() ? snap.val() : {};
+                renderAllData();
+            });
+
+            // 3. Maintenance
+            onValue(ref(db, `${dbSettingsPath}/maintenance`), (snap) => {
+                const isMaint = snap.exists() && snap.val() === true;
+                const toggle = document.getElementById('maintenance-toggle');
+                const dot = document.getElementById('maintenance-dot');
+                if (toggle) toggle.checked = isMaint;
+                if (dot) {
+                    dot.className = isMaint 
+                        ? "w-2 h-2 rounded-full bg-red-500 animate-ping" 
+                        : "w-2 h-2 rounded-full bg-emerald-500 animate-pulse";
+                }
+            });
+
+            // 4. Premium Buy Requests Queue
+            onValue(ref(db, dbPremiumReqsPath), (snap) => {
+                allPremiumRequests = snap.exists() ? snap.val() : {};
+                renderPremiumRequests();
+                renderStats();
+            });
+        }
+
+        // Toggle Maintenance Live
+        document.getElementById('maintenance-toggle').onchange = async (e) => {
+            const val = e.target.checked;
+            await set(ref(db, `${dbSettingsPath}/maintenance`), val);
+            window.showToast(val ? "Maintenance Mode Activated" : "System Restored Online", val ? "exclamation-triangle" : "check-circle", val);
+        };
+
+        function renderAllData() {
+            renderStats();
+            renderUsers();
+            renderAppeals();
+            renderPremiumUsers();
+            renderBannedUsers();
+            renderPremiumRequests();
+        }
+
+        function renderStats() {
+            const usersArr = Object.values(allUsers);
+            const total = usersArr.length;
+            const banned = usersArr.filter(u => u.isBanned).length;
+            const appeals = Object.keys(allAppeals).length;
+            const reqs = Object.keys(allPremiumRequests).length;
+
+            document.getElementById('stat-total-users').innerText = total;
+            document.getElementById('stat-total-banned').innerText = banned;
+            document.getElementById('stat-total-appeals').innerText = appeals;
+            document.getElementById('stat-pending-requests').innerText = reqs;
+
+            document.getElementById('tab-appeal-badge').innerText = appeals;
+            document.getElementById('tab-req-badge').innerText = reqs;
+
+            const mobBadge = document.getElementById('mob-req-badge');
+            if (mobBadge) {
+                if (reqs > 0) mobBadge.classList.remove('hidden');
+                else mobBadge.classList.add('hidden');
+            }
+        }
+
+        // ==========================================
+        // RENDER: USERS DIRECTORY
+        // ==========================================
+        function renderUsers(filterQuery = '') {
+            const container = document.getElementById('users-list-container');
+            if (!container) return;
+            const q = filterQuery.toLowerCase().trim();
+
+            const filtered = Object.keys(allUsers).filter(uid => {
+                const u = allUsers[uid];
+                const name = (u.name || '').toLowerCase();
+                const username = (u.username || '').toLowerCase();
+                return name.includes(q) || username.includes(q) || uid.toLowerCase().includes(q);
+            });
+
+            document.getElementById('users-filtered-count').innerText = `${filtered.length} users`;
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="col-span-full py-12 text-center text-gray-500 text-xs font-semibold">No matching users found.</div>`;
+                return;
+            }
+
+            container.innerHTML = '';
+            filtered.forEach(uid => {
+                const u = allUsers[uid];
+                const card = document.createElement('div');
+                card.className = "glass-panel p-3.5 rounded-3xl flex flex-col justify-between space-y-3 hover:border-white/20 transition-all";
+
+                const isOnline = u.status && u.status.online;
+                const hasTick = Boolean(u.isPremium === true || uid === OFFICIAL_SYSTEM_UID);
+                const tickColor = u.verifiedTickColor || 'text-blue-500';
+                const tickHtml = hasTick ? `<i class="fas fa-check-circle ${tickColor} text-xs ml-1"></i>` : '';
+
+                card.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="relative shrink-0">
+                            <img src="${u.dp || 'https://placehold.co/100'}" class="w-12 h-12 rounded-2xl object-cover bg-slate-800 border border-white/10">
+                            <span class="absolute -bottom-1 -right-1 w-3 h-3 rounded-full ${isOnline ? 'bg-emerald-500 ring-2 ring-slate-900' : 'bg-gray-500 ring-2 ring-slate-900'}"></span>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h4 class="font-bold text-xs text-white truncate flex items-center">${u.name} ${tickHtml}</h4>
+                            <p class="text-[11px] text-blue-400 font-bold truncate">@${u.username}</p>
+                            <span class="text-[9px] text-gray-400 font-mono block truncate">UID: ${uid}</span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-1 border-t border-white/5">
+                        <div class="flex items-center gap-1">
+                            ${u.isPremium ? '<span class="text-[9px] bg-amber-500/20 text-amber-300 font-black px-2 py-0.5 rounded-full border border-amber-500/30">VIP</span>' : ''}
+                            ${u.isBanned ? '<span class="text-[9px] bg-red-500/20 text-red-400 font-black px-2 py-0.5 rounded-full border border-red-500/30">BANNED</span>' : '<span class="text-[9px] bg-emerald-500/20 text-emerald-400 font-black px-2 py-0.5 rounded-full border border-emerald-500/30">ACTIVE</span>'}
+                        </div>
+                        <span class="text-[9px] text-gray-400">${u.birthday || 'No Bday'}</span>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 pt-1 border-t border-white/5">
+                        <button onclick="window.openUserManageModal('${uid}')" class="py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold btn-press">
+                            <i class="fas fa-gear mr-1"></i> Manage
+                        </button>
+                        ${u.isBanned ? `
+                            <button onclick="window.unbanUser('${uid}')" class="py-2 bg-emerald-600/30 hover:bg-emerald-600 text-emerald-300 hover:text-white rounded-xl text-xs font-bold btn-press">
+                                <i class="fas fa-unlock mr-1"></i> Unban
+                            </button>
+                        ` : `
+                            <button onclick="window.promptBanUser('${uid}')" class="py-2 bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white rounded-xl text-xs font-bold btn-press">
+                                <i class="fas fa-ban mr-1"></i> Ban
+                            </button>
+                        `}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        document.getElementById('user-search-input')?.addEventListener('input', (e) => {
+            renderUsers(e.target.value);
+        });
+
+        // ==========================================
+        // RENDER: PREMIUM BUY REQUESTS QUEUE
+        // ==========================================
+        function renderPremiumRequests() {
+            const container = document.getElementById('premium-requests-list');
+            if (!container) return;
+
+            const reqIds = Object.keys(allPremiumRequests);
+            if (reqIds.length === 0) {
+                container.innerHTML = `<div class="glass-panel p-8 rounded-3xl text-center text-gray-500 text-xs font-semibold">No pending premium purchase requests right now.</div>`;
+                return;
+            }
+
+            container.innerHTML = '';
+            reqIds.forEach(rId => {
+                const req = allPremiumRequests[rId];
+                const uid = req.uid || rId;
+                const u = allUsers[uid] || { name: req.username || 'User', username: req.username || uid, dp: 'https://placehold.co/100' };
+
+                const card = document.createElement('div');
+                card.className = "glass-panel p-4 rounded-3xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-l-4 border-l-amber-400";
+                card.innerHTML = `
+                    <div class="flex items-center gap-3 min-w-0">
+                        <img src="${u.dp || 'https://placehold.co/100'}" class="w-12 h-12 rounded-2xl object-cover bg-slate-800 border border-white/10 shrink-0">
+                        <div class="min-w-0">
+                            <h4 class="font-extrabold text-xs text-white truncate">${u.name}</h4>
+                            <p class="text-[11px] text-blue-400 font-bold truncate">@${u.username}</p>
+                            <p class="text-[11px] text-amber-300 font-mono font-bold mt-0.5">
+                                UTR: <span class="bg-black/50 px-2 py-0.5 rounded select-all">${req.utr || 'Direct Request'}</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2 shrink-0">
+                        <button onclick="window.approvePremiumRequest('${rId}', '${uid}')" class="flex-1 sm:flex-none px-4 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-black font-black rounded-xl text-xs shadow-lg shadow-amber-500/20 btn-press">
+                            <i class="fas fa-crown mr-1"></i> Approve VIP
+                        </button>
+                        <button onclick="window.rejectPremiumRequest('${rId}', '${uid}')" class="flex-1 sm:flex-none px-3.5 py-2.5 bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white rounded-xl text-xs font-bold btn-press">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        window.approvePremiumRequest = async function(rId, uid) {
+            // 1. Grant Premium & Tick
+            await update(ref(db, `${dbUsersPath}/${uid}`), {
+                isPremium: true,
+                isVerified: true,
+                verifiedTickColor: 'text-blue-500'
+            });
+
+            // 2. Remove from requests queue
+            await remove(ref(db, `${dbPremiumReqsPath}/${rId}`));
+
+            // 3. Send Official Congratulations Message
+            const welcomeId = [OFFICIAL_SYSTEM_UID, uid].sort().join('_');
+            const now = Date.now();
+            const timeStr = new Date(now).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
+            await push(ref(db, `${dbChatsPath}/${welcomeId}/messages`), {
+                senderId: OFFICIAL_SYSTEM_UID,
+                text: encryptData(`Payment Verified! 🌟\n\nCongratulations! Your account has been upgraded to Chatrix Premium VIP. You now have the verified badge and exclusive profile color access.`),
+                timestamp: now,
+                time: timeStr
+            });
+
+            await update(ref(db, `${dbUserChatsPath}/${uid}/${welcomeId}`), {
+                id: welcomeId,
+                targetUid: OFFICIAL_SYSTEM_UID,
+                name: 'Chatrix',
+                username: 'chatrix_official',
+                dp: 'https://placehold.co/150/2563eb/ffffff?text=CX',
+                isVerified: true,
+                isOfficial: true,
+                lastMessage: encryptData(`Premium VIP Activated! 🌟`),
+                timestamp: now,
+                unread: true
+            });
+
+            window.showToast("Premium VIP Activated for user!", "crown");
+        };
+
+        window.rejectPremiumRequest = async function(rId, uid) {
+            if (!confirm("Reject this premium payment request?")) return;
+            await remove(ref(db, `${dbPremiumReqsPath}/${rId}`));
+
+            const welcomeId = [OFFICIAL_SYSTEM_UID, uid].sort().join('_');
+            const now = Date.now();
+            const timeStr = new Date(now).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
+            await push(ref(db, `${dbChatsPath}/${welcomeId}/messages`), {
+                senderId: OFFICIAL_SYSTEM_UID,
+                text: encryptData(`Payment Update: We could not verify your payment UTR. Please ensure the transaction succeeded and try again with the correct 12-digit number.`),
+                timestamp: now,
+                time: timeStr
+            });
+
+            window.showToast("Request dismissed");
+        };
+
+        // ==========================================
+        // RENDER: UNBAN APPEALS
+        // ==========================================
+        function renderAppeals() {
+            const container = document.getElementById('appeals-list-container');
+            if (!container) return;
+
+            const uids = Object.keys(allAppeals);
+            if (uids.length === 0) {
+                container.innerHTML = `<div class="glass-panel p-8 rounded-3xl text-center text-gray-500 text-xs font-semibold">No pending unban appeals right now.</div>`;
+                return;
+            }
+
+            container.innerHTML = '';
+            uids.forEach(uid => {
+                const appeal = allAppeals[uid];
+                const u = allUsers[uid] || { name: 'Unknown', username: uid, dp: 'https://placehold.co/100' };
+
+                const card = document.createElement('div');
+                card.className = "glass-panel p-4 rounded-3xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-l-4 border-l-emerald-400";
+                card.innerHTML = `
+                    <div class="flex items-start gap-3 min-w-0 flex-1">
+                        <img src="${u.dp || 'https://placehold.co/100'}" class="w-12 h-12 rounded-2xl object-cover bg-slate-800 border border-white/10 shrink-0">
+                        <div class="min-w-0 flex-1">
+                            <h4 class="font-extrabold text-xs text-white">${u.name} <span class="text-blue-400">@${u.username}</span></h4>
+                            <div class="bg-black/50 p-2.5 rounded-xl border border-white/5 mt-1 text-[11px] text-gray-300 leading-relaxed font-medium">
+                                "${appeal.text}"
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2 shrink-0 w-full sm:w-auto">
+                        <button onclick="window.approveAppeal('${uid}')" class="flex-1 sm:flex-none px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold btn-press">
+                            <i class="fas fa-check mr-1"></i> Approve
+                        </button>
+                        <button onclick="window.rejectAppeal('${uid}')" class="flex-1 sm:flex-none px-3.5 py-2 bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white rounded-xl text-xs font-bold btn-press">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        window.approveAppeal = async function(uid) {
+            await window.unbanUser(uid);
+            await remove(ref(db, `${dbAppealsPath}/${uid}`));
+            window.showToast("Appeal approved and account reinstated!");
+        };
+
+        window.rejectAppeal = async function(uid) {
+            if (!confirm("Dismiss this appeal? User will remain restricted.")) return;
+            await remove(ref(db, `${dbAppealsPath}/${uid}`));
+            window.showToast("Appeal dismissed");
+        };
+
+        // ==========================================
+        // RENDER: PREMIUM VIP MEMBERS & REMOVAL
+        // ==========================================
+        function renderPremiumUsers() {
+            const container = document.getElementById('premium-list-container');
+            if (!container) return;
+
+            const premiumUids = Object.keys(allUsers).filter(uid => allUsers[uid].isPremium);
+
+            if (premiumUids.length === 0) {
+                container.innerHTML = `<div class="col-span-full glass-panel p-8 rounded-3xl text-center text-gray-500 text-xs font-semibold">No active premium VIP members.</div>`;
+                return;
+            }
+
+            container.innerHTML = '';
+            premiumUids.forEach(uid => {
+                const u = allUsers[uid];
+                const tickColor = u.verifiedTickColor || 'text-blue-500';
+
+                const card = document.createElement('div');
+                card.className = "glass-panel p-4 rounded-3xl flex flex-col justify-between space-y-3 border-amber-500/20";
+                card.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <img src="${u.dp || 'https://placehold.co/100'}" class="w-12 h-12 rounded-2xl object-cover bg-slate-800 border border-amber-400/30">
+                        <div class="flex-1 min-w-0">
+                            <h4 class="font-extrabold text-xs text-white truncate flex items-center gap-1">
+                                ${u.name} <i class="fas fa-check-circle ${tickColor} text-xs"></i>
+                            </h4>
+                            <p class="text-[11px] text-amber-400 font-bold truncate">@${u.username}</p>
+                            <span class="text-[9px] text-gray-400">Theme: ${u.profileGradient ? 'Custom Color' : 'Default'}</span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-2 border-t border-white/5">
+                        <span class="text-[10px] text-gray-400">Color: <span class="${tickColor} font-bold">${tickColor.replace('text-', '')}</span></span>
+                        <button onclick="window.revokePremium('${uid}')" class="px-3 py-1.5 bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white rounded-xl text-xs font-bold transition-all btn-press">
+                            <i class="fas fa-user-minus mr-1"></i> Revoke VIP
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // ==========================================
+        // RENDER: BANNED USERS
+        // ==========================================
+        function renderBannedUsers() {
+            const container = document.getElementById('banned-list-container');
+            if (!container) return;
+
+            const bannedUids = Object.keys(allUsers).filter(uid => allUsers[uid].isBanned);
+
+            if (bannedUids.length === 0) {
+                container.innerHTML = `<div class="col-span-full glass-panel p-8 rounded-3xl text-center text-gray-500 text-xs font-semibold">No accounts currently banned.</div>`;
+                return;
+            }
+
+            container.innerHTML = '';
+            bannedUids.forEach(uid => {
+                const u = allUsers[uid];
+                const card = document.createElement('div');
+                card.className = "glass-panel p-4 rounded-3xl flex flex-col justify-between space-y-3 border-red-500/20";
+                card.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <img src="${u.dp || 'https://placehold.co/100'}" class="w-12 h-12 rounded-2xl object-cover bg-slate-800 border border-red-500/30">
+                        <div class="flex-1 min-w-0">
+                            <h4 class="font-extrabold text-xs text-white truncate">${u.name}</h4>
+                            <p class="text-[11px] text-red-400 font-bold truncate">@${u.username}</p>
+                            <span class="text-[10px] text-gray-400 block truncate mt-0.5">"${u.banReason || 'Administrative suspension'}"</span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-2 border-t border-white/5">
+                        <span class="text-[9px] text-gray-400 uppercase font-bold">${u.banExpiresAt ? 'Temp Restriction' : 'Permanent'}</span>
+                        <button onclick="window.unbanUser('${uid}')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition-all btn-press">
+                            <i class="fas fa-unlock mr-1"></i> Unban
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // ==========================================
+        // DATABASE ACTIONS: BAN, UNBAN, REVOKE, DELETE
+        // ==========================================
+        window.promptBanUser = function(uid) {
+            const reason = prompt("Enter Ban Reason:", "Violation of Community Guidelines");
+            if (reason === null) return;
+
+            const isTemp = confirm("Is this a 2-Hour Temporary Ban? (Click Cancel for Permanent)");
+            const updates = {
+                isBanned: true,
+                banReason: reason.trim() || "Account restricted by administrator.",
+                banExpiresAt: isTemp ? (Date.now() + 2 * 60 * 60 * 1000) : null
+            };
+
+            update(ref(db, `${dbUsersPath}/${uid}`), updates).then(() => {
+                window.showToast("Account suspended directly in database", "ban", true);
+            });
+        };
+
+        window.unbanUser = async function(uid) {
+            await update(ref(db, `${dbUsersPath}/${uid}`), {
+                isBanned: false,
+                banReason: null,
+                banExpiresAt: null
+            });
+            window.showToast("Account unbanned successfully!", "check-circle");
+        };
+
+        window.revokePremium = async function(uid) {
+            if (!confirm("Revoke Premium VIP from this user? Tick and styling will be removed.")) return;
+            // TICK FIX: Set both isPremium and isVerified to false and clear tick colors
+            await update(ref(db, `${dbUsersPath}/${uid}`), {
+                isPremium: false,
+                isVerified: false,
+                verifiedTickColor: null,
+                profileGradient: null,
+                profilePatternIcon: null
+            });
+            window.showToast("VIP status & Tick removed");
+        };
+
+        window.grantPremium = async function(uid) {
+            const tickColor = prompt("Enter tick color (e.g. text-blue-500, text-amber-500, text-green-500):", "text-blue-500");
+            await update(ref(db, `${dbUsersPath}/${uid}`), {
+                isPremium: true,
+                isVerified: true,
+                verifiedTickColor: tickColor || "text-blue-500"
+            });
+            window.showToast("Premium VIP granted!", "crown");
+            window.openUserManageModal(uid);
+        };
+
+        window.openUserManageModal = function(uid) {
+            const u = allUsers[uid];
+            if (!u) return;
+
+            const modal = document.getElementById('user-modal');
+            const content = document.getElementById('modal-user-content');
+            const passPlain = decryptData(u.password);
+
+            content.innerHTML = `
+                <div class="flex items-center gap-3 bg-black/40 p-3 rounded-2xl border border-white/5">
+                    <img src="${u.dp || 'https://placehold.co/100'}" class="w-12 h-12 rounded-2xl object-cover bg-slate-800">
+                    <div class="flex-1 min-w-0">
+                        <h4 class="font-extrabold text-sm text-white">${u.name}</h4>
+                        <p class="text-xs text-blue-400 font-bold">@${u.username}</p>
+                        <p class="text-[10px] text-gray-400 font-mono">UID: ${uid}</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 text-xs">
+                    <div class="bg-slate-800/80 p-2.5 rounded-2xl border border-white/5">
+                        <span class="text-[9px] text-gray-400 font-bold block uppercase">Decrypted Password:</span>
+                        <span class="font-mono font-bold text-emerald-400 select-all">${passPlain || '(None)'}</span>
+                    </div>
+                    <div class="bg-slate-800/80 p-2.5 rounded-2xl border border-white/5">
+                        <span class="text-[9px] text-gray-400 font-bold block uppercase">Account Status:</span>
+                        <span class="font-bold ${u.isBanned ? 'text-red-400' : 'text-emerald-400'}">${u.isBanned ? 'Banned' : 'Active'}</span>
+                    </div>
+                </div>
+
+                <div class="space-y-2 pt-2 border-t border-white/10">
+                    <label class="block text-[10px] font-bold text-gray-400 uppercase">Edit Full Name</label>
+                    <input type="text" id="edit-name-inp" value="${u.name || ''}" class="w-full bg-slate-800 border border-white/10 rounded-xl p-2.5 text-xs text-white outline-none">
+                    
+                    <label class="block text-[10px] font-bold text-gray-400 uppercase">Change Account Password</label>
+                    <input type="text" id="edit-pass-inp" value="${passPlain || ''}" class="w-full bg-slate-800 border border-white/10 rounded-xl p-2.5 text-xs text-white outline-none">
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 pt-1">
+                    <button onclick="window.saveModalUserEdits('${uid}')" class="py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-bold btn-press">
+                        <i class="fas fa-save mr-1"></i> Save Edits
+                    </button>
+                    ${u.isPremium ? `
+                        <button onclick="window.revokePremium('${uid}'); window.openUserManageModal('${uid}');" class="py-2.5 bg-red-600/30 text-red-300 rounded-xl text-xs font-bold btn-press">
+                            <i class="fas fa-star-half mr-1"></i> Remove VIP
+                        </button>
+                    ` : `
+                        <button onclick="window.grantPremium('${uid}')" class="py-2.5 bg-amber-600 hover:bg-amber-500 text-white rounded-xl text-xs font-bold btn-press">
+                            <i class="fas fa-crown mr-1"></i> Grant VIP
+                        </button>
+                    `}
+                </div>
+
+                <div class="pt-2 border-t border-white/10 flex justify-between items-center">
+                    <button onclick="window.deleteUserForever('${uid}')" class="py-2 text-red-500 hover:text-red-400 text-xs font-bold btn-press">
+                        <i class="fas fa-trash mr-1"></i> Delete Account
+                    </button>
+                    <button onclick="document.getElementById('user-modal').classList.add('hidden')" class="py-2 px-4 bg-slate-800 text-gray-300 rounded-xl text-xs font-bold btn-press">
+                        Close
+                    </button>
+                </div>
+            `;
+            modal.classList.remove('hidden');
+        };
+
+        window.saveModalUserEdits = async function(uid) {
+            const name = document.getElementById('edit-name-inp').value.trim();
+            const pass = document.getElementById('edit-pass-inp').value.trim();
+            if (!name || !pass) return window.showToast("Fields cannot be empty", "times", true);
+
+            await update(ref(db, `${dbUsersPath}/${uid}`), {
+                name: name,
+                password: encryptData(pass)
+            });
+            window.showToast("User details updated in database!");
+            document.getElementById('user-modal').classList.add('hidden');
+        };
+
+        window.deleteUserForever = async function(uid) {
+            if (!confirm(`Permanently wipe @${uid} from database?`)) return;
+            await remove(ref(db, `${dbUsersPath}/${uid}`));
+            await remove(ref(db, `${dbAppealsPath}/${uid}`));
+            window.showToast("Account purged permanently");
+            document.getElementById('user-modal').classList.add('hidden');
+        };
+
+        // ==========================================
+        // TAB NAVIGATION (MOBILE & DESKTOP DUAL SYNC)
+        // ==========================================
+        window.switchTab = function(tabName) {
+            currentTab = tabName;
+            const tabs = ['dashboard', 'requests', 'users', 'appeals', 'premium', 'banned'];
+
+            tabs.forEach(t => {
+                const view = document.getElementById(`view-${t}`);
+                if (view) {
+                    if (t === tabName) view.classList.remove('hidden');
+                    else view.classList.add('hidden');
+                }
+            });
+
+            // Sync Desktop Nav
+            document.querySelectorAll('.nav-tab').forEach(b => {
+                const target = b.id.replace('nav-btn-', '');
+                if (target === tabName) {
+                    b.className = "nav-tab active px-4 py-2 rounded-2xl bg-blue-600 text-white text-xs font-bold flex items-center gap-2 btn-press";
+                } else {
+                    b.className = "nav-tab px-4 py-2 rounded-2xl bg-slate-900 text-gray-400 hover:text-white text-xs font-bold flex items-center gap-2 btn-press";
+                }
+            });
+
+            // Sync Mobile Nav
+            document.querySelectorAll('.mobile-nav-btn').forEach(b => {
+                if (b.dataset.target === tabName) {
+                    b.classList.remove('text-gray-400');
+                    b.classList.add('text-blue-500');
+                } else {
+                    b.classList.remove('text-blue-500');
+                    b.classList.add('text-gray-400');
+                }
+            });
+        };
+
+        // ==========================================
+        // LOCKED SUPPORT IFRAME WINDOW
+        // ==========================================
+        window.openSupportIframe = function() {
+            const frame = document.getElementById('support-frame');
+            frame.src = LOCKED_SUPPORT_URL;
+            const overlay = document.getElementById('support-iframe-overlay');
+            overlay.classList.remove('hidden');
+            overlay.style.display = 'flex';
+        };
+
+        window.closeSupportIframe = function() {
+            const overlay = document.getElementById('support-iframe-overlay');
+            overlay.classList.add('hidden');
+            overlay.style.display = 'none';
+            document.getElementById('support-frame').src = '';
+        };
+
+        // Start session check on load
+        checkAdminSession();
+    </script>
+</body>
+</html>
